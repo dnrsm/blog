@@ -1,0 +1,360 @@
+---
+title: "Gatsbyでブログを作りました"
+date: "2020-05-18"
+path: "/blog/2020/gatsby-blog"
+tags: ["Gatsby", "React"]
+description: "Gatsbyでブログを作りました。"
+---
+
+import { Link } from "gatsby";
+
+# モチベーション
+- Qiitaに記事を書いていたのだが、より個人的なアウトプットの場として自前のブログが欲しくなった
+- 業務でReactを使う機会があまりないので触っておきたかった
+
+# 技術スタック
+<p><Link to={"/about"}>About</Link>にも書いてますが、技術的には以下の構成で作られています。</p>
+
+- [Gatsby](https://www.gatsbyjs.org/)
+  - 静的サイトジェネレーター（SSG）の一つです。
+- [TypeScript](https://www.typescriptlang.org/)
+  - DXが良いし入れない理由もないので入れる。
+- [MDX](https://mdxjs.com/)
+  - データソースはMDXを使用しています。Headless CMSより楽そうだし記事を手元で管理したかったから。
+- [Netlify](https://www.netlify.com/)
+    - ホスティング先。
+
+もともとはstarterとして配布されているテーマをいじって作っていたのですが、TypeScriptに書き直したりデザインをいじっているうちに、ゼロから作ってしまった方が速いなと気付き今回のブログ構築に至ります。
+
+ちなみに、その間にNext.jsで作ろうとしていた時期もあったのですが、Gatsbyの方がエコシステムが整っていたのでGatsbyで構築しました。
+
+[コード置いてます。](https://github.com/dnrsm/blog)
+
+# やったこと
+- TypeScriptの導入
+- `gatsby-plugin-graphql-codegen`でGraphQLのスキーマから生成した型を使う
+- gatsby-*.js系のファイルをTypescriptで記述できるようにする
+- MDXで記事が書けるようにする
+- ESLint、Prettierの導入
+
+## TypeScriptの導入
+`gatsby-plugin-typescript`を入れるだけで書けるようになります。
+
+```shell
+$ yarn add -D typescript gatsby-plugin-typescript
+```
+
+`gatsby-config.js`にプラグインとして追加します。
+```js:title=gatsby-config.js
+module.exports = {
+  ...
+  plugins: [
+    ...
+    `gatsby-plugin-typescript`,
+  ]
+}
+```
+
+`tsconfig.json`を追加します。
+```json:title=tsconfig.json
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "esnext",
+        "jsx": "react",
+        "lib": ["dom", "es2015", "es2017"],
+        "esModuleInterop": true
+    },
+    "exclude": [  
+        "node_modules"  
+    ],
+    "include": [
+        "./src/**/*"
+    ]
+}
+```
+
+
+## GraphQLのスキーマから生成した型を使う
+`gatsby-plugin-graphql-codegen`を利用してGraphQLのスキーマから型を生成します。<br/>
+このプラグインを知るまでは自分で型を書いてましたが、自動で生成されるようになってからはすごく楽になりました。<br/>
+導入に関しては以下の記事を参照した。<br/>
+[Gatsby.js を完全TypeScript化する](https://qiita.com/Takepepe/items/144209f860fbe4d5e9bb)
+
+```shell
+$ yarn add gatsby-plugin-graphql-codegen
+```
+
+```js:title=gatsby-config.js
+module.exports = {
+  ...
+  plugins: [
+    ...
+    {
+      resolve: "gatsby-plugin-graphql-codegen",
+      options: {
+        fileName: `types/graphql-types.d.ts`,
+        documentPaths: [
+          "./src/**/*.{ts,tsx}",
+          "./node_modules/gatsby-*/**/*.js",
+        ],
+      },
+    },
+  ],
+};
+```
+
+クエリの名前を`BlogPost`とすると、`BlogPostQuery`という名前で型が生成されます。
+
+```tsx:title=blog-post.tsx
+import * as React from "react";
+import { graphql, PageProps } from "gatsby";
+import SEO from "../components/Seo";
+import Layout from "../components/Layout";
+import Post from "../components/Post";
+import { BlogPostQuery, SitePageContext } from "../../types/graphql-types";
+
+export type Props = PageProps<BlogPostQuery, SitePageContext>;
+
+const BlogPostTemplate: React.FC<Props> = ({ data, pageContext }) => {
+  const { body, frontmatter } = data.mdx;
+
+  return (
+    <Layout pageType={"post"}>
+      <SEO title={frontmatter.title} description={frontmatter.description} />
+      <Post body={body} frontmatter={frontmatter} pageContext={pageContext} />
+    </Layout>
+  );
+};
+
+export default BlogPostTemplate;
+
+export const pageQuery = graphql`
+  query BlogPost($path: String) {
+    mdx(frontmatter: { path: { eq: $path } }) {
+      body
+      frontmatter {
+        title
+        date
+        tags
+        path
+        description
+      }
+    }
+  }
+`;
+```
+
+```ts:title=types/graphql-types.d.ts
+export type BlogPostQuery = {
+  mdx?: Maybe<
+    Pick<Mdx, "body"> & {
+      frontmatter?: Maybe<
+        Pick<MdxFrontmatter, "title" | "date" | "tags" | "path" | "description">
+      >;
+    }
+  >;
+};
+```
+
+## gatsby-*.js系のファイルをTypeScriptで記述できるようにする
+gatsby-*.js系のファイルもTypeScriptで記述できるようにしました。<br/>
+`ts-node`を利用して対応させます。
+
+```shell
+$ yarn add -D ts-node
+```
+
+```js:title=gatsby-node.js
+"use strict";
+
+require("ts-node").register(
+  require("jsonc-parser").parse(
+    require("fs").readFileSync("./tsconfig.json", "utf-8")
+  )
+);
+
+module.exports = require("./src/gatsby-node");
+```
+
+実質的にエントリーポイントは`src/gatsby-node/index.ts`となります。
+```ts:title=src/gatsby-node/index.ts
+import path from "path";
+const blogPostTemplate = path.resolve(`./src/templates/blog-post.tsx`);
+import { GatsbyNode } from "gatsby";
+import {
+  SiteSiteMetadata,
+  MdxConnection,
+  SitePageContext,
+} from "../../types/graphql-types";
+
+type Result = {
+  allMdx: MdxConnection;
+  site: {
+    siteMetadata: SiteSiteMetadata;
+  };
+};
+
+export const createPages: GatsbyNode["createPages"] = async ({
+  graphql,
+  actions: { createPage },
+}) => {
+  const query = `
+    {
+      allMdx(sort: { order: DESC, fields: frontmatter___date }, limit: 1000) {
+        edges {
+          node {
+            frontmatter {
+              path
+              title
+            }
+          }
+        }
+        group(field: frontmatter___tags) {
+          fieldValue
+        }
+      }
+      site {
+        siteMetadata {
+          postsPerPage
+        }
+      }
+    }
+  `;
+
+  const result = await graphql<Result>(query);
+
+  if (result.errors) {
+    throw result.errors;
+  }
+
+  const posts = result.data.allMdx.edges;
+  const {
+    site: { siteMetadata },
+  } = result.data;
+
+  posts.forEach((post, index) => {
+    const previous = index === posts.length - 1 ? null : posts[index + 1].node;
+    const next = index === 0 ? null : posts[index - 1].node;
+
+    createPage<SitePageContext>({
+      path: post.node.frontmatter.path,
+      component: blogPostTemplate,
+      context: {
+        next,
+        previous,
+      },
+    });
+  });
+};
+```
+
+# ESLint、Prettierの導入
+DX的に良い状態にしておきたいので入れておく。
+
+```shell
+$ yarn add -D eslint-config-prettier eslint-plugin-prettier
+```
+
+設定ファイルを書きます。
+```json:title=.eslintrc.json
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "prettier/@typescript-eslint",
+    "prettier/react"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "react/prop-types": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
+    }
+  ]
+}
+```
+
+npm-scriptsに追加します。
+```json:title=package.json
+"lint": "eslint --ignore-path .gitignore . --ext ts --ext tsx --ext js --ext tsx"
+```
+
+## MDXで記事が書けるようにする
+MDXとは、Markdownが拡張されたもので、文書の中にJSXを埋め込めるようにしたものです。<br/>
+Markdownの中にコンポーネントを書けたりする。
+
+```shell
+$ yarn add gatsby-source-filesystem gatsby-plugin-mdx gatsby-remark-images gatsby-remark-code-titles gatsby-remark-prismjs
+```
+
+`gatsby-source-filesystem`と`gatsby-plugin-mdx`だけでMDXからページの作成はできますが、シンタックスハイライターやらなんやらを使いたいので、`gatsbyRemarkPlugins`の中に`gatsby-remark-*`系のプラグインを設定してます。
+
+<!-- ![my image](https://placehold.jp/150x150.png) -->
+
+```js:title=gatsby-config.js
+module.exports = {
+  plugins: [
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `post`,
+        path: `${__dirname}/src/post`,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        extensions: [`.mdx`, `.md`],
+        defaultLayouts: {
+          default: require.resolve("./src/components/Layout.tsx"),
+        },
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 800,
+              quality: 100,
+            },
+          },
+          `gatsby-remark-code-titles`,
+          {
+            resolve: `gatsby-remark-prismjs`,
+            options: {
+              classPrefix: "language-",
+              inlineCodeMarker: true,
+              aliases: {},
+              showLineNumbers: true,
+              noInlineHighlight: false,
+            },
+          },
+        ],
+      },
+    },
+    ...
+  ],
+};
+```
+
+# まとめ
+とりあえず記事書くことろまではできた。
+
+今後は以下の対応も進めていきたい。そのうちやる。
+- ダークモードの追加
+- PWA化
