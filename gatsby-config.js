@@ -127,5 +127,11 @@ module.exports = {
         /* eslint-enable */
       },
     },
+    {
+      resolve: "gatsby-plugin-google-analytics",
+      options: {
+        trackingId: "UA-167551385-1",
+      },
+    },
   ],
 };
