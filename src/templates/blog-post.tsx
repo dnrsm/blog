@@ -3,9 +3,10 @@ import { graphql, PageProps } from "gatsby";
 import SEO from "../components/Seo";
 import Layout from "../components/Layout";
 import Post from "../components/Post";
-import { BlogPostQuery, SitePageContext } from "../../types/graphql-types";
+import { BlogPostQuery } from "../../types/graphql-types";
+import { BlogPostPageContext } from "../gatsby-node";
 
-export type Props = PageProps<BlogPostQuery, SitePageContext>;
+export type Props = PageProps<BlogPostQuery, BlogPostPageContext>;
 
 const BlogPostTemplate: React.FC<Props> = ({ data, pageContext }) => {
   const { body, frontmatter } = data.mdx;

@@ -10,6 +10,8 @@ import {
   SiteSiteMetadata,
   MdxConnection,
   SitePageContext,
+  Mdx,
+  Maybe,
 } from "../../types/graphql-types";
 
 type Result = {
@@ -19,11 +21,16 @@ type Result = {
   };
 };
 
+export type BlogPostPageContext = {
+  next: Maybe<Mdx>;
+  previous: Maybe<Mdx>;
+};
+
 export const createPages: GatsbyNode["createPages"] = async ({
   graphql,
   actions: { createPage },
 }) => {
-  createPage({
+  createPage<SitePageContext>({
     path: "/tags",
     component: tagsTemplate,
     context: { tag: "tag" },
@@ -69,7 +76,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
   const postsPerPage = siteMetadata.postsPerPage;
   const numPages = Math.ceil(posts.length / postsPerPage);
   Array.from({ length: numPages }).forEach((_, i) => {
-    createPage({
+    createPage<SitePageContext>({
       path: i === 0 ? `/blog` : `/blog/${i + 1}`,
       component: archivesTemplate,
       context: {
@@ -85,7 +92,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
     const previous = index === posts.length - 1 ? null : posts[index + 1].node;
     const next = index === 0 ? null : posts[index - 1].node;
 
-    createPage<SitePageContext>({
+    createPage<BlogPostPageContext>({
       path: post.node.frontmatter.path,
       component: blogPostTemplate,
       context: {
@@ -96,7 +103,7 @@ export const createPages: GatsbyNode["createPages"] = async ({
   });
 
   tagGroup.forEach((tag) => {
-    createPage({
+    createPage<SitePageContext>({
       path: `/tag/${tag.fieldValue}`,
       component: tagArchivesTemplate,
       context: {

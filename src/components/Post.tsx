@@ -6,17 +6,13 @@ import media from "../styles/customMediaQuery";
 import Navigation from "./Navigation";
 import PostTagList from "./PostTagList";
 import Share from "./Share";
-import {
-  Maybe,
-  MdxFrontmatter,
-  Scalars,
-  SitePageContext,
-} from "../../types/graphql-types";
+import { Maybe, MdxFrontmatter, Scalars } from "../../types/graphql-types";
+import { BlogPostPageContext } from "../gatsby-node";
 
 type Props = {
   frontmatter?: Maybe<MdxFrontmatter>;
   body?: Scalars["String"];
-  pageContext: SitePageContext;
+  pageContext: BlogPostPageContext;
 };
 
 const container = css`
