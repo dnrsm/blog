@@ -16,7 +16,8 @@ type HeaderMenu = {
 
 const menu = css`
   a {
-    ${tw`text-sm pl-4 text-gray-800 text-black underline text-base font-semibold hover:no-underline`};
+    ${tw`text-sm pl-4 underline text-base font-semibold hover:no-underline`};
+    color: var(--text-800);
 
     ${media.phone} {
       ${tw`text-xs`};

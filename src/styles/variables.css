@@ -20,3 +20,33 @@
 
 @custom-media --phone (width < 768px);
 @custom-media --tablet (width < 1024px);
+
+body.light {
+  --bg: #fff;
+  --text: #222;
+  --text-900: #1a202c;
+  --text-800: #2d3748;
+  --text-700: #4a5568;
+  --text-600: #718096;
+  --highlight: #020411;
+  --progress-container: #eee;
+  --progress-line: #333;
+
+  background-color: var(--bg);
+  color:  var(--text);
+}
+
+body.dark {
+  --bg: #191919;
+  --text: #fff;
+  --text-900: #fff;
+  --text-800: #fff;
+  --text-700: #ccc;
+  --text-600: #fff;
+  --highlight: #fff;
+  --progress-container: #333;
+  --progress-line: #fff;
+
+  background-color: var(--bg);
+  color:  var(--text);
+}

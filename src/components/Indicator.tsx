@@ -12,7 +12,7 @@ const progressContainer = css`
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: #eee;
+  background-color: var(--progress-container);
   transition: 0.2s;
   opacity: 0;
 
@@ -24,7 +24,7 @@ const progressContainer = css`
 const progressLine = css`
   width: 100%;
   height: 100%;
-  background-color: #333;
+  background-color: var(--progress-line);
   top: 0;
   left: -100%;
   position: absolute;

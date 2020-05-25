@@ -20,7 +20,8 @@ const container = css`
 `;
 
 const titleText = css`
-  ${tw`mb-2 font-semibold text-4xl text-gray-800 leading-snug`}
+  ${tw`mb-2 font-semibold text-4xl leading-snug`}
+  color: var(--text-800);
 
   ${media.phone} {
     ${tw`text-2xl`};

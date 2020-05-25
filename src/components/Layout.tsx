@@ -64,7 +64,7 @@ const Layout: React.FC<Props> = ({ children, pageType }) => {
   const {
     blogTitle,
     copyrights,
-    // defaultTheme,
+    defaultTheme,
     headerMenu,
   } = data.site.siteMetadata;
 
@@ -73,7 +73,7 @@ const Layout: React.FC<Props> = ({ children, pageType }) => {
       <Header
         pageType={pageType}
         blogTitle={blogTitle}
-        // defaultTheme={defaultTheme}
+        defaultTheme={defaultTheme}
         headerMenu={headerMenu}
       />
       <div css={container}>

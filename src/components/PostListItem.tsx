@@ -15,6 +15,7 @@ type Props = {
 
 const StyledLink = styled(Link)`
   ${tw`no-underline text-gray-800 hover:text-opacity-50 transition duration-300`}
+  color: var(--text-800);
 `;
 
 const titleText = css`
@@ -23,6 +24,7 @@ const titleText = css`
 
 const dateText = css`
   ${tw`text-sm text-gray-700`}
+  color: var(--text-700);
 
   ${media.phone} {
     ${tw`text-xs`};

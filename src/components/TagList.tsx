@@ -25,8 +25,10 @@ const tags = css`
     ${tw`pr-4 pb-2 text-lg`}
 
     a {
-      ${tw`text-white bg-black hover:text-gray-600`}
+      ${tw`hover:text-gray-600`}
       padding: 2px 8px;
+      background-color: var(--highlight);
+      color: var(--bg);
     }
   }
 `;

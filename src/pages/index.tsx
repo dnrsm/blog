@@ -1,6 +1,7 @@
 import * as React from "react";
 import { graphql, Link, PageProps } from "gatsby";
 import styled from "@emotion/styled";
+import { css } from "@emotion/core";
 import tw from "twin.macro";
 import SEO from "../components/Seo";
 import Layout from "../components/Layout";
@@ -8,6 +9,25 @@ import PostList from "../components/PostList";
 import { IndexQuery } from "../../types/graphql-types";
 
 export type Props = PageProps<IndexQuery>;
+
+const heading = css`
+  ${tw`flex justify-between items-center`}
+`;
+
+const headingTitle = css`
+  ${tw`text-3xl mb-3 font-semibold inline-block`}
+  color: var(--text-900);
+`;
+
+const ViewAllLink = styled(Link)`
+  ${tw`hover:text-gray-600 transition duration-300`}
+  color: var(--text);
+`;
+
+const MoreLink = styled(Link)`
+  ${tw`text-sm hover:text-gray-600 transition duration-300`}
+  color: var(--text-800);
+`;
 
 const Index: React.FC<Props> = ({ data }) => {
   const {
@@ -17,10 +37,10 @@ const Index: React.FC<Props> = ({ data }) => {
   return (
     <Layout>
       <SEO />
-      <Heading>
-        <p>Latest</p>
-        <Link to="/tags">view all tags</Link>
-      </Heading>
+      <div css={heading}>
+        <p css={headingTitle}>Latest</p>
+        <ViewAllLink to="/tags">view all tags</ViewAllLink>
+      </div>
       <PostList posts={posts} />
       <MoreLink to="/blog">more...</MoreLink>
     </Layout>
@@ -49,17 +69,3 @@ export const indexQuery = graphql`
 `;
 
 export default Index;
-
-const Heading = styled.div`
-  ${tw`flex justify-between items-center`}
-  p {
-    ${tw`text-3xl mb-3 font-semibold text-gray-800 inline-block`}
-  }
-  a {
-    ${tw`hover:text-gray-600 transition duration-300`}
-  }
-`;
-
-const MoreLink = styled(Link)`
-  ${tw`text-sm text-gray-800 hover:text-gray-600 transition duration-300`}
-`;

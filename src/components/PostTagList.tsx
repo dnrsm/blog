@@ -15,6 +15,8 @@ const tagList = css`
 
     a {
       ${tw`text-white bg-black hover:text-gray-600`}
+      background-color: var(--highlight);
+      color: var(--bg);
       padding: 1px 5px;
     }
   }

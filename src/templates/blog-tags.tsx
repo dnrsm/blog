@@ -11,8 +11,9 @@ import { BlogTagsQuery } from "../../types/graphql-types";
 
 export type Props = PageProps<BlogTagsQuery>;
 
-const heading = css`
-  ${tw`text-3xl mb-3 font-semibold text-gray-900 inline-block`}
+const headingTitle = css`
+  ${tw`text-3xl mb-3 font-semibold inline-block`}
+  color: var(--text-900);
 `;
 
 const tagItem = css`
@@ -20,6 +21,7 @@ const tagItem = css`
 
   > a {
     ${tw`underline text-base`}
+    color: var(--text);
   }
 `;
 
@@ -28,8 +30,9 @@ const post = css`
 `;
 
 const StyledLink = styled(Link)`
-  ${tw`no-underline text-gray-800 mt-1 mb-1 pt-1 pb-1 block flex justify-between items-center flex-1`}
+  ${tw`no-underline mt-1 mb-1 pt-1 pb-1 block flex justify-between items-center flex-1`}
   border-top: 1px solid #ddd;
+  color: var(--text-800);
 
   ${media.phone} {
     ${tw`block`};
@@ -45,7 +48,8 @@ const title = css`
 `;
 
 const date = css`
-  ${tw`text-xs text-gray-600`}
+  ${tw`text-xs`}
+  color: var(--text-700);
 `;
 
 const TagsPage: React.FC<Props> = ({ data }: Props) => {
@@ -62,7 +66,7 @@ const TagsPage: React.FC<Props> = ({ data }: Props) => {
   return (
     <Layout>
       <SEO title={"Tags"} />
-      <p css={heading}>Tags</p>
+      <p css={headingTitle}>Tags</p>
       <TagList tagGroup={tags} />
       <ul>
         {group.map((tag, index) => (

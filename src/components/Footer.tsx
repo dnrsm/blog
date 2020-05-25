@@ -11,7 +11,8 @@ const footer = css`
 `;
 
 const copyRight = css`
-  ${tw`text-xs text-gray-700`}
+  ${tw`text-xs`}
+  color: var(--text-700);
 `;
 
 const Footer: React.FC<Props> = ({ copyrights }) => {

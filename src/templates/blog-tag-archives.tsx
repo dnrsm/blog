@@ -27,16 +27,19 @@ const heading = css`
 `;
 
 const headingTitle = css`
-  ${tw`text-3xl mb-3 font-semibold text-gray-900 inline-block`}
+  ${tw`text-3xl mb-3 font-semibold inline-block`}
+  color: var(--text-900);
 `;
 
 const StyledLink = styled(Link)`
   ${tw`hover:text-gray-600 transition duration-300`}
+  color: var(--text);
 `;
 
 const highlight = css`
-  ${tw`text-white pr-1 pl-1`}
-  background-color: #000;
+  ${tw`pr-1 pl-1`}
+  background-color: var(--highlight);
+  color: var(--bg);
 `;
 
 const TagArchives: React.FC<Props> = ({
