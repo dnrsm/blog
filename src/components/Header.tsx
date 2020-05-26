@@ -137,7 +137,7 @@ const Header: React.FC<Props> = ({
               <Menu headerMenu={headerMenu} />
             </ul>
             <button css={toggleBtn} onClick={onChangeTheme}>
-              {userTheme === "light" ? (
+              {userTheme || defaultTheme === "light" ? (
                 <svg
                   viewBox="-12 0 448 448.04455"
                   xmlns="http://www.w3.org/2000/svg"

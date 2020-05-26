@@ -28,7 +28,7 @@ const shareLink = css`
   }
 `;
 
-const svg = css`
+const icon = css`
   path {
     fill: var(--text);
   }
@@ -43,19 +43,19 @@ const Share: React.FC<Props> = ({ url, title, tags }) => {
   return (
     <div css={shareLink}>
       <TwitterShareButton url={url} title={title}>
-        <TwitterIcon round size={iconSize} css={svg} />
+        <TwitterIcon round size={iconSize} css={icon} />
       </TwitterShareButton>
       <FacebookShareButton url={url} quote={title}>
-        <FacebookIcon round size={iconSize} css={svg} />
+        <FacebookIcon round size={iconSize} css={icon} />
       </FacebookShareButton>
       <LineShareButton url={url} title={title}>
-        <LineIcon round size={iconSize} css={svg} />
+        <LineIcon round size={iconSize} css={icon} />
       </LineShareButton>
       <PocketShareButton url={url} title={title}>
-        <PocketIcon round size={iconSize} css={svg} />
+        <PocketIcon round size={iconSize} css={icon} />
       </PocketShareButton>
       <TumblrShareButton url={url} title={title} tags={tags}>
-        <TumblrIcon round size={iconSize} css={svg} />
+        <TumblrIcon round size={iconSize} css={icon} />
       </TumblrShareButton>
     </div>
   );
