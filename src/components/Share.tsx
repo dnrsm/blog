@@ -28,54 +28,34 @@ const shareLink = css`
   }
 `;
 
+const svg = css`
+  path {
+    fill: var(--text);
+  }
+  circle {
+    fill: var(--bg);
+  }
+`;
+
 const Share: React.FC<Props> = ({ url, title, tags }) => {
   const iconSize = 56;
-  const fill = {
-    fill: "#fff",
-  };
-  const iconFillColor = "black";
 
   return (
     <div css={shareLink}>
       <TwitterShareButton url={url} title={title}>
-        <TwitterIcon
-          round
-          size={iconSize}
-          bgStyle={fill}
-          iconFillColor={iconFillColor}
-        />
+        <TwitterIcon round size={iconSize} css={svg} />
       </TwitterShareButton>
       <FacebookShareButton url={url} quote={title}>
-        <FacebookIcon
-          round
-          size={iconSize}
-          bgStyle={fill}
-          iconFillColor={iconFillColor}
-        />
+        <FacebookIcon round size={iconSize} css={svg} />
       </FacebookShareButton>
       <LineShareButton url={url} title={title}>
-        <LineIcon
-          round
-          size={iconSize}
-          bgStyle={fill}
-          iconFillColor={iconFillColor}
-        />
+        <LineIcon round size={iconSize} css={svg} />
       </LineShareButton>
       <PocketShareButton url={url} title={title}>
-        <PocketIcon
-          round
-          size={iconSize}
-          bgStyle={fill}
-          iconFillColor={iconFillColor}
-        />
+        <PocketIcon round size={iconSize} css={svg} />
       </PocketShareButton>
       <TumblrShareButton url={url} title={title} tags={tags}>
-        <TumblrIcon
-          round
-          size={iconSize}
-          bgStyle={fill}
-          iconFillColor={iconFillColor}
-        />
+        <TumblrIcon round size={iconSize} css={svg} />
       </TumblrShareButton>
     </div>
   );

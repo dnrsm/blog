@@ -6,6 +6,7 @@ const postCSSNested = require("postcss-nested");
 /* eslint-enable */
 module.exports = {
   siteMetadata: {
+    siteUrl: `https://dnrsm.dev`,
     title: `dnrsm.dev`,
     description: `A simple starter for Gatsby. That's it.`,
     author: "dnrsm",
@@ -133,5 +134,6 @@ module.exports = {
         trackingId: "UA-167551385-1",
       },
     },
+    `gatsby-plugin-sitemap`,
   ],
 };
