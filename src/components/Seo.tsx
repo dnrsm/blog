@@ -3,10 +3,10 @@ import { Helmet } from "react-helmet";
 import { useStaticQuery, graphql } from "gatsby";
 
 type Props = {
-  description?: string;
   lang?: string;
   meta?: MetaType[];
   title?: string;
+  description?: string;
 };
 
 type MetaType = {
@@ -14,7 +14,7 @@ type MetaType = {
   content: string;
 };
 
-const SEO: React.FC<Props> = ({ description, lang, meta, title }) => {
+const SEO: React.FC<Props> = ({ lang, meta, title, description }) => {
   const data = useStaticQuery(graphql`
     query DefaultSEOQuery {
       site {

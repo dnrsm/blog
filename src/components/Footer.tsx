@@ -1,6 +1,7 @@
 import * as React from "react";
 import { css } from "@emotion/core";
 import tw from "twin.macro";
+import media from "../styles/customMediaQuery";
 
 type Props = {
   copyrights: string;
@@ -8,6 +9,9 @@ type Props = {
 
 const footer = css`
   ${tw`mb-8 absolute bottom-0`}
+  ${media.desktop} {
+    ${tw`mb-4`}
+  }
 `;
 
 const copyRight = css`

@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 
 const Works: React.FC = () => (
   <Layout>
-    <div>
+    <div className="page">
       <h1>Works</h1>
       <p>empty</p>
     </div>

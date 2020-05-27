@@ -15,10 +15,6 @@ type Props = {
   pageContext: BlogPostPageContext;
 };
 
-const container = css`
-  ${tw`w-full`}
-`;
-
 const titleText = css`
   ${tw`mb-2 font-semibold text-4xl leading-snug`}
   color: var(--text-800);
@@ -43,7 +39,7 @@ const Post: React.FC<Props> = ({ body, frontmatter, pageContext }) => {
   const isBrowser = typeof window !== `undefined`;
 
   return (
-    <div css={container}>
+    <>
       <p css={titleText}>{title}</p>
       <p css={dateText}>{date}</p>
       <PostTagList tags={tags} />
@@ -61,7 +57,7 @@ const Post: React.FC<Props> = ({ body, frontmatter, pageContext }) => {
         nextPagePath={nextPagePath}
         nextLabel={nextLabel}
       />
-    </div>
+    </>
   );
 };
 

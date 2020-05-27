@@ -8,7 +8,7 @@ module.exports = {
   siteMetadata: {
     siteUrl: `https://dnrsm.dev`,
     title: `dnrsm.dev`,
-    description: `A simple starter for Gatsby. That's it.`,
+    description: `dnrsm.devのブログです。個人的な備忘録・ナレッジベースとして使っている技術ブログです。`,
     author: "dnrsm",
     postsPerPage: 3,
     blogTitle: "dnrsm.dev",
