@@ -123,7 +123,7 @@ module.exports = {
         start_url: `/`,
         background_color: `#292a2d`,
         theme_color: `#292a2d`,
-        display: `minimal-ui`,
+        display: `standalone`,
         icon: `static/icon.png`,
         /* eslint-enable */
       },
@@ -134,6 +134,7 @@ module.exports = {
         trackingId: "UA-167551385-1",
       },
     },
+    `gatsby-plugin-offline`,
     `gatsby-plugin-sitemap`,
   ],
 };

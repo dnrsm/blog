@@ -1195,8 +1195,6 @@ export type QueryAllSitePageArgs = {
 export type QuerySiteArgs = {
   buildTime?: Maybe<DateQueryOperatorInput>;
   siteMetadata?: Maybe<SiteSiteMetadataFilterInput>;
-  port?: Maybe<IntQueryOperatorInput>;
-  host?: Maybe<StringQueryOperatorInput>;
   polyfill?: Maybe<BooleanQueryOperatorInput>;
   pathPrefix?: Maybe<StringQueryOperatorInput>;
   id?: Maybe<StringQueryOperatorInput>;
@@ -1285,8 +1283,6 @@ export type QueryAllSitePluginArgs = {
 export type Site = Node & {
   buildTime?: Maybe<Scalars['Date']>;
   siteMetadata?: Maybe<SiteSiteMetadata>;
-  port?: Maybe<Scalars['Int']>;
-  host?: Maybe<Scalars['String']>;
   polyfill?: Maybe<Scalars['Boolean']>;
   pathPrefix?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -1497,8 +1493,6 @@ export type SiteFieldsEnum =
   | 'siteMetadata___headerMenu'
   | 'siteMetadata___headerMenu___title'
   | 'siteMetadata___headerMenu___path'
-  | 'port'
-  | 'host'
   | 'polyfill'
   | 'pathPrefix'
   | 'id'
@@ -1591,8 +1585,6 @@ export type SiteFieldsEnum =
 export type SiteFilterInput = {
   buildTime?: Maybe<DateQueryOperatorInput>;
   siteMetadata?: Maybe<SiteSiteMetadataFilterInput>;
-  port?: Maybe<IntQueryOperatorInput>;
-  host?: Maybe<StringQueryOperatorInput>;
   polyfill?: Maybe<BooleanQueryOperatorInput>;
   pathPrefix?: Maybe<StringQueryOperatorInput>;
   id?: Maybe<StringQueryOperatorInput>;
@@ -1654,6 +1646,8 @@ export type SitePageContext = {
   skip?: Maybe<Scalars['Int']>;
   numPages?: Maybe<Scalars['Int']>;
   currentPage?: Maybe<Scalars['Int']>;
+  next?: Maybe<SitePageContextNext>;
+  previous?: Maybe<SitePageContextPrevious>;
   frontmatter?: Maybe<SitePageContextFrontmatter>;
 };
 
@@ -1663,6 +1657,8 @@ export type SitePageContextFilterInput = {
   skip?: Maybe<IntQueryOperatorInput>;
   numPages?: Maybe<IntQueryOperatorInput>;
   currentPage?: Maybe<IntQueryOperatorInput>;
+  next?: Maybe<SitePageContextNextFilterInput>;
+  previous?: Maybe<SitePageContextPreviousFilterInput>;
   frontmatter?: Maybe<SitePageContextFrontmatterFilterInput>;
 };
 
@@ -1678,6 +1674,42 @@ export type SitePageContextFrontmatterFilterInput = {
   path?: Maybe<StringQueryOperatorInput>;
   date?: Maybe<DateQueryOperatorInput>;
   description?: Maybe<StringQueryOperatorInput>;
+};
+
+export type SitePageContextNext = {
+  frontmatter?: Maybe<SitePageContextNextFrontmatter>;
+};
+
+export type SitePageContextNextFilterInput = {
+  frontmatter?: Maybe<SitePageContextNextFrontmatterFilterInput>;
+};
+
+export type SitePageContextNextFrontmatter = {
+  path?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type SitePageContextNextFrontmatterFilterInput = {
+  path?: Maybe<StringQueryOperatorInput>;
+  title?: Maybe<StringQueryOperatorInput>;
+};
+
+export type SitePageContextPrevious = {
+  frontmatter?: Maybe<SitePageContextPreviousFrontmatter>;
+};
+
+export type SitePageContextPreviousFilterInput = {
+  frontmatter?: Maybe<SitePageContextPreviousFrontmatterFilterInput>;
+};
+
+export type SitePageContextPreviousFrontmatter = {
+  path?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type SitePageContextPreviousFrontmatterFilterInput = {
+  path?: Maybe<StringQueryOperatorInput>;
+  title?: Maybe<StringQueryOperatorInput>;
 };
 
 export type SitePageEdge = {
@@ -1784,6 +1816,10 @@ export type SitePageFieldsEnum =
   | 'context___skip'
   | 'context___numPages'
   | 'context___currentPage'
+  | 'context___next___frontmatter___path'
+  | 'context___next___frontmatter___title'
+  | 'context___previous___frontmatter___path'
+  | 'context___previous___frontmatter___title'
   | 'context___frontmatter___title'
   | 'context___frontmatter___path'
   | 'context___frontmatter___date'
