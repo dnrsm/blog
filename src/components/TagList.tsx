@@ -23,6 +23,10 @@ const tags = css`
   li {
     ${tw`pr-4 pb-2 text-lg`}
 
+    ${media.phone} {
+      ${tw`text-base`};
+    }
+
     a {
       ${tw`hover:text-gray-600`}
       padding: 2px 8px;
