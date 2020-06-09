@@ -7,14 +7,10 @@ import media from "../styles/customMediaQuery";
 import SEO from "../components/Seo";
 import Layout from "../components/Layout";
 import TagList from "../components/TagList";
+import PageTitle from "../components/PageTitle";
 import { BlogTagsQuery } from "../../types/graphql-types";
 
 export type Props = PageProps<BlogTagsQuery>;
-
-const headingTitle = css`
-  ${tw`text-3xl mb-3 font-semibold inline-block`}
-  color: var(--text-900);
-`;
 
 const tagItem = css`
   ${tw`mb-10 list-none`}
@@ -66,7 +62,7 @@ const TagsPage: React.FC<Props> = ({ data }: Props) => {
   return (
     <Layout>
       <SEO title={"Tags"} />
-      <p css={headingTitle}>Tags</p>
+      <PageTitle showTagsLink={false}>Tags</PageTitle>
       <TagList tagGroup={tags} />
       <ul>
         {group.map((tag, index) => (
