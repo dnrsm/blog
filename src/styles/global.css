@@ -37,6 +37,7 @@ body {
 
 .post,
 .page {
+  font-size: 0.925rem;;
   > p {
     margin: 1em 0;
   }
@@ -189,8 +190,8 @@ body {
 
   blockquote {
     border-left: 2px solid;
-    margin: 40px 32px;
-    padding: 10px 20px;
+    margin: 40px 16px 0 16px;
+    padding: 10px 20px 10px 20px;
     font-style: italic;
   }
 }

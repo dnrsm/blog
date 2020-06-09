@@ -1,5 +1,4 @@
-// import * as React from "react";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useStaticQuery, graphql } from "gatsby";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -47,11 +46,7 @@ const Container = styled("div")`
 `;
 
 const main = css`
-  ${tw`w-full`}
-`;
-
-const spacer = css`
-  ${tw`mt-20 h-12 w-1`}
+  ${tw`w-full pb-32`}
 `;
 
 const Layout: React.FC<Props> = ({ children, pageType, pageContext }) => {
@@ -105,7 +100,6 @@ const Layout: React.FC<Props> = ({ children, pageType, pageContext }) => {
       />
       <Container minH={minHeight}>
         <main css={main}>{children}</main>
-        <div css={spacer} />
         <Footer copyrights={copyrights} />
       </Container>
     </>
