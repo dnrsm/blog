@@ -26,9 +26,10 @@ const pagenation = css`
 `;
 
 const StyledLink = styled((props: StyledLinkProps) => <Link {...props} />)`
-  ${tw`transition duration-300 text-gray-800 hover:text-opacity-50 underline inline-block`}
+  ${tw`transition duration-300 hover:no-underline underline inline-block`}
   max-width: 50%;
   text-align: ${(props: StyledLinkProps): string => props.textalign};
+  color: var(--text-800);
 `;
 
 const Navigation: React.FC<Props> = ({
