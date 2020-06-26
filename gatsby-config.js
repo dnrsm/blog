@@ -58,6 +58,7 @@ module.exports = {
               quality: 100,
             },
           },
+          `gatsby-remark-autolink-headers`,
           `gatsby-remark-code-titles`,
           {
             resolve: `gatsby-remark-prismjs`,

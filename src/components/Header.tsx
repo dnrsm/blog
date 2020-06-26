@@ -36,7 +36,7 @@ const StyledHeader = styled.header`
 `;
 
 const wrap = css`
-  ${tw`flex justify-between max-w-900 w-full`}
+  ${tw`flex justify-between max-w-1000 w-full`}
 `;
 
 const title = css`

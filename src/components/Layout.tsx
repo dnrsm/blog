@@ -36,7 +36,7 @@ type ContP = {
 };
 
 const Container = styled("div")`
-  ${tw`mx-auto relative max-w-900`}
+  ${tw`mx-auto relative max-w-1000`}
   min-height: calc(100vh - (52px + 6.5rem));
 
   ${media.desktop} {
