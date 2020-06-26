@@ -2377,7 +2377,7 @@ export type BlogPostQueryVariables = {
 
 
 export type BlogPostQuery = { mdx?: Maybe<(
-    Pick<Mdx, 'body'>
+    Pick<Mdx, 'body' | 'tableOfContents'>
     & { frontmatter?: Maybe<Pick<MdxFrontmatter, 'title' | 'date' | 'tags' | 'path' | 'description'>> }
   )> };
 

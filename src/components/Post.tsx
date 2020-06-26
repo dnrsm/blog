@@ -6,12 +6,14 @@ import media from "../styles/customMediaQuery";
 import Navigation from "./Navigation";
 import PostTagList from "./PostTagList";
 import Share from "./Share";
+import TOC from "./TOC";
 import { Maybe, MdxFrontmatter, Scalars } from "../../types/graphql-types";
 import { BlogPostPageContext } from "../gatsby-node";
 
 type Props = {
-  frontmatter?: Maybe<MdxFrontmatter>;
   body?: Scalars["String"];
+  tableOfContents: Maybe<Scalars["JSON"]>;
+  frontmatter?: Maybe<MdxFrontmatter>;
   pageContext: BlogPostPageContext;
 };
 
@@ -28,7 +30,26 @@ const dateText = css`
   ${tw`text-base mb-2`}
 `;
 
-const Post: React.FC<Props> = ({ body, frontmatter, pageContext }) => {
+const postWrap = css`
+  ${tw`flex flex-row-reverse justify-between items-start`}
+  ${media.desktop} {
+    ${tw`flex-col`};
+  }
+`;
+
+const post = css`
+  ${tw`max-w-post`}
+  ${media.desktop} {
+    ${tw`max-w-full`};
+  }
+`;
+
+const Post: React.FC<Props> = ({
+  body,
+  tableOfContents,
+  frontmatter,
+  pageContext,
+}) => {
   const { title, date, tags, path } = frontmatter;
   const previousPost = pageContext.previous;
   const nextPost = pageContext.next;
@@ -43,9 +64,13 @@ const Post: React.FC<Props> = ({ body, frontmatter, pageContext }) => {
       <p css={titleText}>{title}</p>
       <p css={dateText}>{date}</p>
       <PostTagList tags={tags} />
-      <div className="post">
-        <MDXRenderer>{body}</MDXRenderer>
+      <div css={postWrap}>
+        <TOC tableOfContents={tableOfContents.items} />
+        <div css={post} className="post">
+          <MDXRenderer>{body}</MDXRenderer>
+        </div>
       </div>
+
       <Share
         url={isBrowser ? `${location.origin}${path}` : ""}
         title={title}

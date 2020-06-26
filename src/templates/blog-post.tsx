@@ -9,12 +9,17 @@ import { BlogPostPageContext } from "../gatsby-node";
 export type Props = PageProps<BlogPostQuery, BlogPostPageContext>;
 
 const BlogPostTemplate: React.FC<Props> = ({ data, pageContext }) => {
-  const { body, frontmatter } = data.mdx;
+  const { body, tableOfContents, frontmatter } = data.mdx;
 
   return (
     <Layout pageType={"post"}>
       <SEO title={frontmatter.title} description={frontmatter.description} />
-      <Post body={body} frontmatter={frontmatter} pageContext={pageContext} />
+      <Post
+        body={body}
+        tableOfContents={tableOfContents}
+        frontmatter={frontmatter}
+        pageContext={pageContext}
+      />
     </Layout>
   );
 };
@@ -25,6 +30,7 @@ export const pageQuery = graphql`
   query BlogPost($path: String) {
     mdx(frontmatter: { path: { eq: $path } }) {
       body
+      tableOfContents
       frontmatter {
         title
         date

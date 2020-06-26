@@ -19,13 +19,13 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-.post {
+/* .post {
   margin-top: 4.75rem;
 
   @media (--phone) {
     margin-top: 3rem;
   }
-}
+} */
 
 .page {
   margin-top: 3rem;
@@ -37,7 +37,7 @@ body {
 
 .post,
 .page {
-  font-size: 0.925rem;;
+  font-size: 15px;
   > p {
     margin: 1em 0;
     white-space: pre-wrap;
@@ -53,7 +53,7 @@ body {
 
   h1 {
     font-size: 1.775rem;
-    margin-top: 60px;
+    padding-top: 60px;
     margin-bottom: 20px;
 
     @media (--phone) {
@@ -63,7 +63,7 @@ body {
 
   h2 {
     font-size: 1.525rem;
-    margin-top: 3rem;
+    padding-top: 3rem;
     margin-bottom: 20px;
 
     @media (--phone) {
@@ -73,7 +73,7 @@ body {
 
   h3 {
     font-size: 1.375rem;
-    margin-top: 2rem;
+    padding-top: 2rem;
     margin-bottom: 20px;
 
     @media (--phone) {
@@ -83,7 +83,7 @@ body {
 
   h4 {
     font-size: 1.125rem;
-    margin-top: 2rem;
+    padding-top: 2rem;
     margin-bottom: 20px;
 
     @media (--phone) {
