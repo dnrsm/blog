@@ -4,13 +4,13 @@ import tw from "twin.macro";
 import media from "../styles/customMediaQuery";
 
 type Props = {
-  tableOfContents: Items[];
+  tableOfContents: TocItems[];
 };
 
-type Items = {
+type TocItems = {
   url: string;
   title: string;
-  items?: Items[];
+  items?: TocItems[];
 };
 
 const toc = css`
@@ -23,7 +23,7 @@ const toc = css`
 `;
 
 const heading = css`
-  ${tw`text-xl pb-2 font-semibold`}
+  ${tw`text-lg pb-2 font-semibold`}
   ${media.desktop} {
     ${tw`text-2xl`};
   }
@@ -46,40 +46,37 @@ const listItem = css`
   }
 `;
 
-const TableList: React.FC<{ tableOfContents: Items[]; depth: number }> = ({
+const Items: React.FC<{ tableOfContents: TocItems[]; depth: number }> = ({
   tableOfContents,
   depth,
 }) => {
   return (
-    <>
-      <ul css={list}>
-        {tableOfContents.map((item) => (
-          <li
-            css={listItem}
-            key={item.url}
-            style={{
-              paddingLeft: depth !== 0 ? "1em" : "0",
-              // paddingBottom: depth === 0 ? "0.25rem" : "0",
-            }}
-          >
-            <a href={item.url}>{item.title}</a>
-            {item.items && (
-              <TableList tableOfContents={item.items} depth={depth + 1} />
-            )}
-          </li>
-        ))}
-      </ul>
-    </>
+    <ul css={list}>
+      {tableOfContents.map((item) => (
+        <li
+          css={listItem}
+          key={item.url}
+          style={{
+            paddingLeft: depth !== 0 ? "1em" : "0",
+          }}
+        >
+          <a href={item.url}>{item.title}</a>
+          {item.items && (
+            <Items tableOfContents={item.items} depth={depth + 1} />
+          )}
+        </li>
+      ))}
+    </ul>
   );
 };
 
-const TOC: React.FC<Props> = ({ tableOfContents }) => {
+const Toc: React.FC<Props> = ({ tableOfContents }) => {
   return (
     <div css={toc}>
-      <summary css={heading}>Table of Contents</summary>
-      <TableList tableOfContents={tableOfContents} depth={0} />
+      <h3 css={heading}>Table of Contents</h3>
+      <Items tableOfContents={tableOfContents} depth={0} />
     </div>
   );
 };
 
-export default TOC;
+export default Toc;
