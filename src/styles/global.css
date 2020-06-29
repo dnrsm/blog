@@ -2,6 +2,11 @@
 @import "./prism.css";
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,400;0,700;1,400&display=swap');
 
+:not(pre)>code[class*='language-'] {
+  /*...*/
+  white-space: normal;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -11,7 +16,7 @@ body {
   font-weight: 400;
   line-height: 1.75;
   background-color: var(--bg);
-  color:  var(--text);
+  color: var(--text);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   font-feature-settings: "liga", "tnum", "case", "calt", "zero", "ss01", "locl";
@@ -19,26 +24,11 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* .post {
-  margin-top: 4.75rem;
-
-  @media (--phone) {
-    margin-top: 3rem;
-  }
-} */
-
-.page {
-  margin-top: 3rem;
-
-  @media (--phone) {
-    margin-top: 2rem;
-  }
-}
-
 .post,
 .page {
   font-size: 15px;
-  > p {
+
+  >p {
     margin: 1em 0;
     white-space: pre-wrap;
   }
@@ -47,13 +37,17 @@ body {
     text-decoration: underline;
   }
 
+  .gatsby-resp-image-wrapper {
+    margin-bottom: 3rem;
+  }
+
   img {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 30px 60px -10px, rgba(0, 0, 0, 0.22) 0px 18px 36px -18px;
   }
 
   h1 {
     font-size: 1.775rem;
-    padding-top: 60px;
+    padding-top: 3.75rem;
     margin-bottom: 20px;
 
     @media (--phone) {
@@ -194,6 +188,29 @@ body {
     margin: 40px 16px 0 16px;
     padding: 10px 20px 10px 20px;
     font-style: italic;
+  }
+}
+
+.post {
+  margin-top: 4.75rem;
+
+  >h1 {
+    &:first-of-type {
+      padding-top: 0;
+    }
+    
+  }
+
+  @media (--phone) {
+    margin-top: 3rem;
+  }
+}
+
+.page {
+  margin-top: 3rem;
+
+  @media (--phone) {
+    margin-top: 2rem;
   }
 }
 

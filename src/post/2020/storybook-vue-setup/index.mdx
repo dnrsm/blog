@@ -131,8 +131,7 @@ export const PrimaryButton = () => ({
 
 
 # グローバルなSCSSを読み込む
-`.storybook/Decorator.vue`を作成して以下のようにする。
-`<style lang="scss">`に読み込ませたいSCSSをimportする。
+`.storybook/Decorator.vue`を作成して`<style lang="scss">`に読み込ませたいSCSSをimportする。
 
 ```html:title=.storybook/Decorator.vue
 <template>
@@ -151,8 +150,10 @@ export const PrimaryButton = () => ({
 </style>
 ```
 
-`.storybook/config.js`を作成し、以下のようにする。
-```javascript:title=.storybook/config.js
+`.storybook/config.js`を作成します。
+`addDecorator`で`Decorator.vue`を設定します。
+
+```js:title=.storybook/config.js
 import { addDecorator } from '@storybook/vue';
 import Decorator from './Decorator.vue';
 
@@ -163,6 +164,7 @@ addDecorator(() => ({
 ```
 
 `.storybook/main.js`に以下を追加します。
+`sass-resources-loader`で変数などをまとめたscssファイルをwebpackで読み込むようにしていたので、StorybookのWebpackにも設定します。
 ```js:title=.storybook/main.js
 module.exports = {
   webpackFinal: (config) => {
@@ -171,7 +173,7 @@ module.exports = {
       test: /\.scss$/,    
       loaders: ['style-loader', 'css-loader', 'sass-loader']
     });
-    config.module.rules.push({ // 変数などをまとめたファイルをwebpackで読み込むようにしていたのでこっちにも追加
+    config.module.rules.push({
       test: /\.(css|scss)$/,
       use: [
         {

@@ -6,7 +6,7 @@ import media from "../styles/customMediaQuery";
 import Navigation from "./Navigation";
 import PostTagList from "./PostTagList";
 import Share from "./Share";
-import TOC from "./TOC";
+import Toc from "./Toc";
 import { Maybe, MdxFrontmatter, Scalars } from "../../types/graphql-types";
 import { BlogPostPageContext } from "../gatsby-node";
 
@@ -65,7 +65,7 @@ const Post: React.FC<Props> = ({
       <p css={dateText}>{date}</p>
       <PostTagList tags={tags} />
       <div css={postWrap}>
-        <TOC tableOfContents={tableOfContents.items} />
+        <Toc tableOfContents={tableOfContents.items} />
         <div css={post} className="post">
           <MDXRenderer>{body}</MDXRenderer>
         </div>
