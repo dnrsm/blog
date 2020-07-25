@@ -206,7 +206,7 @@ module.exports = {
               }
             `,
             output: "/rss.xml",
-            title: "dnrsm.dev's RSS Feed",
+            title: "dnrsm.dev",
             match: "^/blog/"
           }
         ]
