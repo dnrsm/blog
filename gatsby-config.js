@@ -176,13 +176,13 @@ module.exports = {
         feeds: [
           {
             serialize: ({ query: { site, allMdx } }) => {
-              return allMdx.edges.map(edge => {
+              return allMdx.edges.map((edge) => {
                 return Object.assign({}, edge.node.frontmatter, {
                   description: edge.node.excerpt,
                   date: edge.node.frontmatter.date,
                   url: `${site.siteMetadata.siteUrl}${edge.node.frontmatter.path}`,
                   guid: `${site.siteMetadata.siteUrl}${edge.node.frontmatter.path}`,
-                  custom_elements: [{ "content:encoded": edge.node.html }]
+                  custom_elements: [{ "content:encoded": edge.node.html }],
                 });
               });
             },
@@ -207,10 +207,10 @@ module.exports = {
             `,
             output: "/rss.xml",
             title: "dnrsm.dev",
-            match: "^/blog/"
-          }
-        ]
-      }
-    }
+            match: "^/blog/",
+          },
+        ],
+      },
+    },
   ],
 };
