@@ -1,10 +1,23 @@
 import * as React from "react";
+import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 import tw from "twin.macro";
 import media from "../styles/customMediaQuery";
 
 type Props = {
   tableOfContents: TocItems[];
+  isShow: boolean;
+  tocShow: () => void;
+};
+
+type ItemsProps = {
+  tableOfContents: TocItems[];
+  depth: number;
+  tocShow?: () => void;
+};
+
+type StyledTocProps = {
+  isShow: boolean;
 };
 
 type TocItems = {
@@ -13,12 +26,20 @@ type TocItems = {
   items?: TocItems[];
 };
 
-const toc = css`
+const StyledToc = styled.div`
   ${tw`max-w-toc w-full sticky right-0`}
   padding-top: 60px;
   top: 1rem;
+  background-color: var(--bg);
   ${media.desktop} {
     ${tw`pt-6 max-w-full relative`};
+  }
+  ${media.tablet} {
+    ${tw`fixed z-20 p-8 overflow-scroll`};
+    transition: 0.3s;
+    top: ${(props: StyledTocProps): string => (props.isShow ? "40%" : "100%")};
+    height: 60%;
+    border-radius: 8px 8px 0 0;
   }
 `;
 
@@ -40,16 +61,16 @@ const list = css`
 
 const listItem = css`
   a {
-    display: block;
     margin: 2px 0;
-    ${tw`pl-2 hover:bg-gray-100`}
+    &:hover {
+      background-color: var(--bg-gray-100);
+      color: #333;
+    }
+    ${tw`pl-2 block`}
   }
 `;
 
-const Items: React.FC<{ tableOfContents: TocItems[]; depth: number }> = ({
-  tableOfContents,
-  depth,
-}) => {
+const Items: React.FC<ItemsProps> = ({ tableOfContents, depth, tocShow }) => {
   return (
     <ul css={list}>
       {tableOfContents.map((item) => (
@@ -59,6 +80,7 @@ const Items: React.FC<{ tableOfContents: TocItems[]; depth: number }> = ({
           style={{
             paddingLeft: depth !== 0 ? "1em" : "0",
           }}
+          onClick={tocShow}
         >
           <a href={item.url}>{item.title}</a>
           {item.items && (
@@ -70,12 +92,12 @@ const Items: React.FC<{ tableOfContents: TocItems[]; depth: number }> = ({
   );
 };
 
-const Toc: React.FC<Props> = ({ tableOfContents }) => {
+const Toc: React.FC<Props> = ({ tableOfContents, isShow, tocShow }) => {
   return (
-    <div css={toc}>
+    <StyledToc isShow={isShow}>
       <h3 css={heading}>Table of Contents</h3>
-      <Items tableOfContents={tableOfContents} depth={0} />
-    </div>
+      <Items tableOfContents={tableOfContents} depth={0} tocShow={tocShow} />
+    </StyledToc>
   );
 };
 

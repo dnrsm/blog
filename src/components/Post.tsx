@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useState } from "react";
+import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 import tw from "twin.macro";
 import { MDXRenderer } from "gatsby-plugin-mdx";
@@ -7,6 +8,7 @@ import Navigation from "./Navigation";
 import PostTagList from "./PostTagList";
 import Share from "./Share";
 import Toc from "./Toc";
+import TocButton from "./TocButton";
 import { Maybe, MdxFrontmatter, Scalars } from "../../types/graphql-types";
 import { BlogPostPageContext } from "../gatsby-node";
 
@@ -44,6 +46,16 @@ const post = css`
   }
 `;
 
+const Overlay = styled.div`
+  ${tw`w-full h-full z-10 bg-black bg-opacity-50 fixed left-0`}
+  top: 5%;
+  opacity: ${(props: { isShow: boolean }): string =>
+    props.isShow ? "100" : "0"};
+  visibility: ${(props: { isShow: boolean }): string =>
+    props.isShow ? "visible" : "hidden"};
+  transition: 0.3s;
+`;
+
 const Post: React.FC<Props> = ({
   body,
   tableOfContents,
@@ -59,18 +71,28 @@ const Post: React.FC<Props> = ({
   const nextLabel = nextPost && nextPost.frontmatter.title;
   const isBrowser = typeof window !== `undefined`;
 
+  const [isTocShow, setIsTocShow] = useState<boolean>(false);
+
+  const tocShow = (): void => {
+    setIsTocShow(!isTocShow);
+  };
   return (
     <>
       <p css={titleText}>{title}</p>
       <p css={dateText}>{date}</p>
       <PostTagList tags={tags} />
       <div css={postWrap}>
-        <Toc tableOfContents={tableOfContents.items} />
+        <Toc
+          tableOfContents={tableOfContents.items}
+          isShow={isTocShow}
+          tocShow={tocShow}
+        />
         <div css={post} className="post">
           <MDXRenderer>{body}</MDXRenderer>
         </div>
       </div>
-
+      <Overlay isShow={isTocShow} onClick={tocShow} />
+      <TocButton tocShow={tocShow} />
       <Share
         url={isBrowser ? `${location.origin}${path}` : ""}
         title={title}
