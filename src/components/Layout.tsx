@@ -73,7 +73,6 @@ const Layout: React.FC<Props> = ({ children, pageType, pageContext }) => {
   } = data.site.siteMetadata;
   const title = pageContext ? pageContext.frontmatter.title : "";
   const description = pageContext ? pageContext.frontmatter.description : "";
-
   const [minHeight, setMinHeight] = useState<string>("");
 
   useEffect(() => {

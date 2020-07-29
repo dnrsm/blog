@@ -14,7 +14,7 @@ type Props = {
 };
 
 const StyledLink = styled(Link)`
-  ${tw`no-underline text-gray-800 hover:text-opacity-50 transition duration-300`}
+  ${tw`no-underline text-gray-800 hover:text-gray-600`}
   color: var(--text-800);
 `;
 

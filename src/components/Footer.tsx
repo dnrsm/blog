@@ -30,19 +30,23 @@ const copyRight = css`
   color: var(--text-700);
 `;
 
+const icon = css`
+  color: var(--text);
+`;
+
 const Footer: React.FC<Props> = ({ copyrights }) => {
   return (
     <footer css={footer}>
       <small css={copyRight}>&copy; {copyrights}</small>
       <ul css={list}>
         <li>
-          <a href="https://github.com/dnrsm" target="_blank">
-            <FontAwesomeIcon icon={faGithub} color="#020411" />
+          <a href="https://github.com/dnrsm" target="_blank" rel="noreferrer">
+            <FontAwesomeIcon icon={faGithub} css={icon} />
           </a>
         </li>
         <li>
-          <a href="https://dnrsm.dev/rss.xml" target="_blank">
-            <FontAwesomeIcon icon={faRss} color="#020411" />
+          <a href="https://dnrsm.dev/rss.xml" target="_blank" rel="noreferrer">
+            <FontAwesomeIcon icon={faRss} css={icon} />
           </a>
         </li>
       </ul>

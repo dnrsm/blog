@@ -154,7 +154,7 @@ body {
     font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
     font-feature-settings: normal;
     font-weight: normal;
-    background: var(--light-background-secondary);
+    background: var(--bg-secondary);
     padding: 1px 6px;
     margin: 0 2px;
     border-radius: 5px;
