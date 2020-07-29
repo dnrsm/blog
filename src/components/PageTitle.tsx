@@ -24,7 +24,7 @@ const headingTitle = css`
 `;
 
 const StyledLink = styled(Link)`
-  ${tw`hover:text-gray-600 transition duration-300`}
+  ${tw`hover:text-gray-600`}
   color: var(--text);
 
   ${media.phone} {

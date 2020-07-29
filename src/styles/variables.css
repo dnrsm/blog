@@ -5,6 +5,8 @@ body {
 
 body.light {
   --bg: #fff;
+  --bg-secondary: #f1f1f1;
+  --bg-gray-100: #f7fafc;
   --text: #222;
   --text-900: #1a202c;
   --text-800: #2d3748;
@@ -16,13 +18,18 @@ body.light {
 }
 
 body.dark {
-  --bg: #191919;
+  --bg: #1d1d1d;
+  --bg-secondary: #f1f1f1;
+  --bg-gray-100: #f7fafc;
   --text: #fff;
   --text-900: #fff;
   --text-800: #fff;
-  --text-700: #ccc;
+  --text-700: #fff;
   --text-600: #fff;
   --highlight: #fff;
   --progress-container: #333;
   --progress-line: #fff;
 }
+
+@custom-media --phone (width < 768px);
+@custom-media --tablet (width < 1024px);

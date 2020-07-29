@@ -10,7 +10,7 @@ module.exports = {
     title: `dnrsm.dev`,
     description: `dnrsm.devのブログです。個人的な備忘録・ナレッジベースとして使っている技術ブログです。`,
     author: "dnrsm",
-    postsPerPage: 3,
+    postsPerPage: 100,
     blogTitle: "dnrsm.dev",
     copyrights: "2020 dnrsm.dev",
     defaultTheme: "light",
@@ -182,6 +182,7 @@ module.exports = {
                   date: edge.node.frontmatter.date,
                   url: `${site.siteMetadata.siteUrl}${edge.node.frontmatter.path}`,
                   guid: `${site.siteMetadata.siteUrl}${edge.node.frontmatter.path}`,
+                  // eslint-disable-next-line @typescript-eslint/camelcase
                   custom_elements: [{ "content:encoded": edge.node.html }],
                 });
               });

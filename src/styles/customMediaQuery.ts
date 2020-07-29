@@ -3,7 +3,7 @@ const customMediaQuery = (maxWidth: number): string =>
 
 const media = {
   custom: customMediaQuery,
-  desktop: customMediaQuery(1022),
+  desktop: customMediaQuery(1024),
   tablet: customMediaQuery(768),
   phone: customMediaQuery(576),
 };
