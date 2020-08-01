@@ -47,13 +47,16 @@ const post = css`
 `;
 
 const Overlay = styled.div`
-  ${tw`w-full h-full z-10 bg-black bg-opacity-50 fixed left-0`}
-  top: 5%;
-  opacity: ${(props: { isShow: boolean }): string =>
-    props.isShow ? "100" : "0"};
-  visibility: ${(props: { isShow: boolean }): string =>
-    props.isShow ? "visible" : "hidden"};
-  transition: 0.3s;
+  display: none;
+  ${media.tablet} {
+    ${tw`w-full h-full z-10 bg-black bg-opacity-50 fixed left-0 block`}
+    top: 5%;
+    opacity: ${(props: { isShow: boolean }): string =>
+      props.isShow ? "100" : "0"};
+    visibility: ${(props: { isShow: boolean }): string =>
+      props.isShow ? "visible" : "hidden"};
+    transition: 0.3s;
+  }
 `;
 
 const Post: React.FC<Props> = ({
