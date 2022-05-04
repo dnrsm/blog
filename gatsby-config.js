@@ -132,7 +132,7 @@ module.exports = {
         background_color: `#292a2d`,
         theme_color: `#292a2d`,
         display: `standalone`,
-        icon: `static/icon.png`,
+        icon: `static/icon.jpeg`,
         /* eslint-enable */
       },
     },
