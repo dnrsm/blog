@@ -17,10 +17,10 @@ import LinkCard from "../../../components/LinkCard";
 
 The State of JS 2021の満足度と興味ではかなり高い方にある。
 さすがに利用率と認知度は低め。
+[https://2021.stateofjs.com/ja-JP/libraries/front-end-frameworks/](https://2021.stateofjs.com/ja-JP/libraries/front-end-frameworks/)
 
-<!-- https://2021.stateofjs.com/ja-JP/libraries/front-end-frameworks/ -->
-
-<LinkCard url="https://2021.stateofjs.com/ja-JP/libraries/front-end-frameworks/" />
+今回作ったアプリのリポジトリはこちら
+https://github.com/dnrsm/solidjs-sample
 
 # セットアップ
 
@@ -121,8 +121,8 @@ Storeを利用したTodoリストを作ってみる。
 
 ## 制御フロー
 
-Todoリストの表示部分には、`<For>`コンポーネントという制御フローコンポーネントがあるのでそれを使っている。
-`map`だと全体が再レンダリングされて非効率なので、こういう専用コンポーネントが用意してるとのこと。
+Todoリストの表示部分には、`<For>`コンポーネントという制御フローコンポーネントがあるのでそれを使ってみる。
+`map`だと全体が再レンダリングされて非効率なので、こういう専用コンポーネントを用意されている。
 `<For>`だと配列を変更してもそれに対応するノードのみ再レンダリングされる。
 
 ```tsx
