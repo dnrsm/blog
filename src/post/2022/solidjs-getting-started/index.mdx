@@ -1,0 +1,546 @@
+---
+title: "SolidJSに入門してみる"
+date: "2022-05-05"
+path: "/blog/2022/solidjs-getting-started"
+tags: ["SolidJS"]
+description: "軽量かつ高速なUIライブラリであるSolidJSに入門してみる。"
+---
+
+import LinkCard from "../../../components/LinkCard";
+
+# 概要
+
+軽量かつ高速なライブラリを使ってみたいなと思い、最近ちょくちょく耳にするようになったSolidJSに入門してみる。
+似たようなライブラリだとSvelteの方が有名かつ人気だと思うが、独自テンプレートなのが嫌で敬遠していた。
+逆にいうと、Reactに似ているかJSXが使えればキャッチアップのモチベーションになりやすい。
+まずは、基本機能を試してみるために小さなアプリを作ってみるだけなのですべての機能までは試さない。
+
+The State of JS 2021の満足度と興味ではかなり高い方にある。
+さすがに利用率と認知度は低め。
+
+<!-- https://2021.stateofjs.com/ja-JP/libraries/front-end-frameworks/ -->
+
+<LinkCard url="https://2021.stateofjs.com/ja-JP/libraries/front-end-frameworks/" />
+
+# セットアップ
+
+playgroundや豊富なチュートリアルもあるが、まずはローカルで動かしてみる。
+
+- plauground
+
+  <LinkCard url="https://playground.solidjs.com" />
+
+- チュートリアル
+
+  <LinkCard url="https://www.solidjs.com/tutorial/introduction_basics" />
+
+TypeScript版のテンプレートがあるようなので使ってみる。
+
+```shell
+# テンプレートをclone
+$ npx degit solidjs/templates/ts solidjs-sample
+Need to install the following packages:
+  degit
+Ok to proceed? (y) y
+> cloned solidjs/templates#HEAD to solidjs-sample
+
+# install
+$ yarn
+
+# dev
+$ yarn dev
+```
+
+Viteを使っているのでビルドとHMRがかなり速くて快適。
+
+# createSignalとcreateEffectを使いカウンターを作ってみる
+
+よくあるカウンターコンポーネントを作ってみる。
+
+## createSignal
+
+リアクティブな値を作ってみる。
+`createSignal`はReactの`useState`の構文に似ているが、ゲッターとセッターの関数を返すので若干違う。
+
+```tsx
+const [count, setCount] = createSignal(0);
+```
+
+値を読み取りたい場合は以下のようにする。
+
+```tsx
+<div>{count()}</div>;
+```
+
+## createEffect
+
+`createEffect`は実行中に読み取ったSignalを自動的にサブスクライブして、変更されれば前回実行時に返された値で再実行する。
+
+```tsx
+createEffect(() => {
+  console.log("count is", count());
+});
+```
+
+第二引数に値を入れると初期化されるとのこと。
+
+```tsx
+createEffect((prev) => {
+  console.log("count is", count());
+  const sum = count() + 100;
+  console.log("sum is", sum);
+  return sum;
+}, 0);
+```
+
+## コンポーネントの全体像
+
+```tsx
+import type { Component } from "solid-js";
+import { createSignal, createEffect } from "solid-js";
+
+const CounterPage: Component = () => {
+  const [count, setCount] = createSignal(0);
+  createEffect(() => {
+    console.log("count is", count());
+  });
+  return (
+    <>
+      <div>{count()}</div>
+      <button onClick={() => setCount((c) => c + 1)}>increment</button>
+    </>
+  );
+};
+
+export default CounterPage;
+```
+
+# createStoreを使いTodoリストを作ってみる
+
+Storeを利用したTodoリストを作ってみる。
+
+## 制御フロー
+
+Todoリストの表示部分には、`<For>`コンポーネントという制御フローコンポーネントがあるのでそれを使っている。
+`map`だと全体が再レンダリングされて非効率なので、こういう専用コンポーネントが用意してるとのこと。
+`<For>`だと配列を変更してもそれに対応するノードのみ再レンダリングされる。
+
+```tsx
+<For each={props.todos}>
+  {(item) => (
+    <TodoItem
+      todo={item}
+      toggleTodo={props.toggleTodo}
+      removeTodo={props.removeTodo}
+    />
+  )}
+</For>;
+```
+
+FAQでも説明されている。
+
+<LinkCard url="https://github.com/solidjs/solid-docs/blob/main/langs/en/guides/faq.md#why-shouldnt-i-use-map-in-my-template-and-whats-the-difference-between-for-and-index" />
+
+制御フローには他にもいろいろある。
+
+<LinkCard url="https://www.solidjs.com/docs/latest/api#%E5%88%B6%E5%BE%A1%E3%83%95%E3%83%AD%E3%83%BC" />
+
+## コンポーネントの型付け
+
+`Component`型が用意されていて、以下のように定義されている。
+
+```tsx
+type Component<P = {}> = (props: PropsWithChildren<P>) => JSX.Element;
+```
+
+なので、ジェネリクスにPropsの型を渡せば良さそう。
+
+```tsx
+const TodoList: Component<TodoListProps> = (props) => {
+  ...
+};
+```
+
+## 動的クラス
+
+動的にクラスを当てたい場合、`classList`というSXのカスタム属性があるのでそれを使う。
+以下のように値がtrueであれば`key`がクラスとして当たる。Vueっぽい。
+
+```tsx
+<li classList={{ [styles.completed]: todo.completed }}>
+```
+
+カスタムJSX属性も他にいろいろある。
+
+<LinkCard url="https://www.solidjs.com/docs/latest/api#%E7%89%B9%E5%88%A5%E3%81%AA-jsx-%E5%B1%9E%E6%80%A7" />
+
+## Props
+
+注意点として、追跡スコープの外でpropsをdestructureするとリアクティブではなくなる。
+JSXやエフェクトの中でプロパティにアクセスしないと再レンダリングされずリアクティブにはならない。
+
+```tsx
+// リアクティブになる
+const TodoItem = (props) => {
+  return <li classList={{ [styles.completed]: props.todo.completed }}>todo</li>;
+};
+
+// リアクティブにならない
+const TodoItem = (props) => {
+  const completed = props.todo.completed;
+
+  return <li classList={{ [styles.completed]: completed }}>todo</li>;
+};
+```
+
+これもFAQで説明されている。
+
+<LinkCard url="https://github.com/solidjs/solid-docs/blob/main/langs/en/guides/faq.md#why-shouldnt-i-use-map-in-my-template-and-whats-the-difference-between-for-and-index" />
+
+## ref
+
+Reactのように`useRef`とか使わなくても変数を宣言しておけば要素を参照できる。
+
+```tsx
+const Input: Component<Props> = (props) => {
+  let input!: HTMLInputElement;
+
+  const onSubmit = () => {
+    if (!input.value.trim()) return;
+    addTodo(input.value);
+    input.value = "";
+  };
+
+  return (
+    <>
+      <input type="text" ref={input} />
+      <button onClick={() => onSubmit()}>Add Todo</button>
+    </>
+  );
+};
+```
+
+<LinkCard url="https://www.solidjs.com/docs/latest/api#ref" />
+
+## コンポーネントの全体像
+
+```tsx:title=TodoList.tsx
+import type { Component } from "solid-js";
+import { For } from "solid-js";
+import styles from "./TodoList.module.css";
+import TodoItem from "./TodoItem";
+import { Todo } from "../store/todo";
+
+type Props = {
+  todos: Readonly<Todo[]>;
+  toggleTodo: (id: number) => void;
+  removeTodo: (id: number) => void;
+};
+
+const TodoList: Component<Props> = (props) => {
+  return (
+    <ul class={styles.list}>
+      <For each={props.todos}>
+        {(item) => (
+          <TodoItem
+            todo={item}
+            toggleTodo={props.toggleTodo}
+            removeTodo={props.removeTodo}
+          />
+        )}
+      </For>
+    </ul>
+  );
+};
+
+export default TodoList;
+```
+
+```tsx:title=TodoItem.tsx
+import type { Component } from "solid-js";
+import { Todo } from "../store/todo";
+import styles from "./TodoItem.module.css";
+
+type Props = {
+  todo: Todo;
+  toggleTodo: (id: string) => void;
+  removeTodo: (id: string) => void;
+};
+
+const TodoItem: Component<Props> = (props) => {
+  const { todo, toggleTodo, removeTodo } = props;
+
+  return (
+    <li classList={{ [styles.completed]: todo.completed }}>
+      <input type="checkbox" onChange={() => toggleTodo(todo.id)} />
+      <span>{todo.text}</span>
+      <button onClick={() => removeTodo(todo.id)}>Remove</button>
+    </li>
+  );
+};
+
+export default TodoItem;
+```
+
+```tsx:title=Input.tsx
+import type { Component } from "solid-js";
+
+type Props = {
+  addTodo: (text: string) => void;
+};
+
+const Input: Component<Props> = (props) => {
+  const { addTodo } = props;
+  let input!: HTMLInputElement;
+
+  const onSubmit = () => {
+    if (!input.value.trim()) return;
+    addTodo(input.value);
+    input.value = "";
+  };
+
+  return (
+    <>
+      <input type="text" ref={input} />
+      <button onClick={() => onSubmit()}>Add Todo</button>
+    </>
+  );
+};
+
+export default Input;
+```
+
+## createStore
+
+Todoリストのストアを作ってみる。
+`createStore`で作れる。readonlyなプロキシオブジェクトを返す。
+
+```ts
+import { createStore } from "solid-js/store";
+
+const initialValue: Store = { todos: [] };
+
+const [state, setState] = createStore(initialValue);
+
+const addTodo = (text: string) => {
+  setState("todos", (todos) => [
+    ...todos,
+    { id: ulid(), text, completed: false },
+  ]);
+};
+```
+
+ユーティリティもいくつかあるようだが触ってない。
+
+<LinkCard url="https://www.solidjs.com/docs/latest/api#%E3%82%B9%E3%83%88%E3%82%A2" />
+
+# ライフサイクル
+
+ライフサイクル系のメソッドを使ってみたかったので、`onMount`で適当なデータを入れてみる。
+Vueっぽい。
+
+```ts
+onMount(() => {
+  addTodo("test");
+});
+```
+
+他に`onCleanup`と`onError`がある。
+
+<LinkCard url="https://www.solidjs.com/docs/latest/api#%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB" />
+
+## Storeの全体像
+
+```ts:title=todo.tsx
+import { createStore } from "solid-js/store";
+import { onMount } from "solid-js";
+import { ulid } from "ulid";
+
+export type Todo = {
+  id: string;
+  text: string;
+  completed: boolean;
+};
+
+type Store = {
+  todos: Todo[];
+};
+
+const initialValue: Store = { todos: [] };
+
+export const useTodo = () => {
+  const [state, setState] = createStore(initialValue);
+
+  const addTodo = (text: string) => {
+    setState("todos", (todos) => [
+      ...todos,
+      { id: ulid(), text, completed: false },
+    ]);
+  };
+
+  const removeTodo = (id: string) => {
+    setState("todos", (todos) => [...todos.filter((todo) => todo.id !== id)]);
+  };
+
+  const toggleTodo = (id: string) => {
+    setState(
+      "todos",
+      (todo) => todo.id === id,
+      "completed",
+      (completed) => !completed
+    );
+  };
+
+  // mount時に適当なデータを入れてみる
+  onMount(() => {
+    addTodo("test");
+  });
+
+  return {
+    state,
+    addTodo,
+    removeTodo,
+    toggleTodo,
+  };
+};
+```
+
+# createResourceでAPIの非同期処理を試してみる
+
+非同期リクエストを試してみる。
+今回はパブリックAPIのhttps://cataas.com/ を使わせていただいた。
+
+## createResource
+
+`createResource`で非同期リソースを使える。
+構文はSWRとかReact Queryと似ているので、使ったことがあればすぐに馴染みそう。
+
+```tsx
+const fetchData = async (skip: number) =>
+  (await fetch(`https://cataas.com/api/cats?skip=${skip}&limit=10`)).json();
+
+const [skip, setSkip] = createSignal(0);
+const [data, { refetch }] = createResource<Cat[], number>(skip, fetchData);
+```
+
+読み込み中の判定とかエラーは、返り値の一つ目の値に`loading`と`error`プロパティとして生えている。
+
+```tsx
+// 読込中
+<div>{data.loading && "Loading..."}</div>;
+// エラー
+<div>{data.error && "error"}</div>;
+```
+
+## 全体像
+
+```tsx
+import type { Component } from "solid-js";
+import { createResource, For, createSignal, Suspense } from "solid-js";
+import { Cat } from "../types";
+
+const fetchData = async (skip: number) =>
+  (await fetch(`https://cataas.com/api/cats?skip=${skip}&limit=10`)).json();
+
+const CatsPage: Component = () => {
+  const [skip, setSkip] = createSignal(0);
+  const [data, { refetch }] = createResource<Cat[], number>(skip, fetchData);
+
+  let input!: HTMLInputElement;
+
+  const onSetSkip = () => {
+    if (!input.value.trim()) return;
+    if (isNaN(Number(input.value))) return;
+    setSkip(Number(input.value));
+  };
+
+  return (
+    <>
+      <h1>Cats Page</h1>
+      <input type="number" placeholder="Enter Skip Number" ref={input} />
+      <button onClick={() => onSetSkip()}>set skip</button>
+      <button onClick={() => refetch()}>refetch</button>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ul>
+          <For each={data()}>
+            {(cat) => (
+              <li>
+                <img
+                  src={`https://cataas.com/cat/${cat.id}`}
+                  alt={cat.tags.join("")}
+                />
+              </li>
+            )}
+          </For>
+        </ul>
+      </Suspense>
+    </>
+  );
+};
+
+export default CatsPage;
+```
+
+# ルーティングできるようにしてみる
+
+`solid-app-router`というライブラリがあるので入れてみる。
+
+```bash
+$ yarn add solid-app-router
+```
+
+<LinkCard url="https://github.com/solidjs/solid-app-router" />
+
+よくあるルーティングライブラリと似たような使い勝手。
+
+```tsx:title=App.tsx
+import type { Component } from "solid-js";
+import { lazy } from "solid-js";
+import { Router, Routes, Route, Link } from "solid-app-router";
+import styles from "./App.module.css";
+
+const IndexPage = lazy(() => import("./pages/Index"));
+const CatsPage = lazy(() => import("./pages/Cats"));
+const CounterPage = lazy(() => import("./pages/Counter"));
+
+const App: Component = () => {
+  return (
+    <Router>
+      <div class={styles.App}>
+        <div class={styles.nav}>
+          <Link href="/">Todo Page</Link>
+          <Link href="/cats">Cats Page </Link>
+          <Link href="/counter">Counter Page </Link>
+        </div>
+        <Routes>
+          <Route path="/" element={<IndexPage />} />
+          <Route path="/cats" element={<CatsPage />} />
+          <Route path="/counter" element={<CounterPage />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
+
+export default App;
+```
+
+## lazy
+
+`lazy`を使うと遅延読み込みができる。
+
+```tsx
+const IndexPage = lazy(() => import("./pages/Index"));
+```
+
+<LinkCard url="https://www.solidjs.com/docs/latest/api#lazy" />
+
+# まとめ
+
+かなりパフォーマンスが良いUIライブラリなので結構期待している（なのでこの記事を書いている）。
+ただ、小規模なアプリとかならいけそうな気はするが、そうでない場合、現時点ではコニュニティとエコシステムの豊富さからReactを選びそうではある。
+SolidJSにNext.jsのようなフレームワークが出てくればより選択しやすくなりそう。
+
+詳しくは日本語にも対応している公式ドキュメントを読むと良い。
+
+<LinkCard url="https://www.solidjs.com/" />
