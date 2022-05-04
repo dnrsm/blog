@@ -47,7 +47,7 @@ body {
 
   h1 {
     font-size: 1.775rem;
-    padding-top: 3.75rem;
+    padding-top: 3.5rem;
     margin-bottom: 20px;
 
     @media (--phone) {
@@ -57,7 +57,7 @@ body {
 
   h2 {
     font-size: 1.525rem;
-    padding-top: 3rem;
+    padding-top: 2.5rem;
     margin-bottom: 20px;
 
     @media (--phone) {
