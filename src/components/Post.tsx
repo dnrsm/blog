@@ -48,7 +48,7 @@ const post = css`
 
 const Overlay = styled.div`
   display: none;
-  ${media.tablet} {
+  ${media.desktop} {
     ${tw`w-full h-full z-10 bg-black bg-opacity-50 fixed left-0 block`}
     top: 5%;
     opacity: ${(props: { isShow: boolean }): string =>
@@ -76,7 +76,7 @@ const Post: React.FC<Props> = ({
 
   const [isTocShow, setIsTocShow] = useState<boolean>(false);
 
-  const tocShow = (): void => {
+  const toggleToc = (): void => {
     setIsTocShow(!isTocShow);
   };
   return (
@@ -88,14 +88,14 @@ const Post: React.FC<Props> = ({
         <Toc
           tableOfContents={tableOfContents.items}
           isShow={isTocShow}
-          tocShow={tocShow}
+          toggleToc={toggleToc}
         />
         <div css={post} className="post">
           <MDXRenderer>{body}</MDXRenderer>
         </div>
       </div>
-      <Overlay isShow={isTocShow} onClick={tocShow} />
-      <TocButton tocShow={tocShow} />
+      <Overlay isShow={isTocShow} onClick={toggleToc} />
+      <TocButton toggleToc={toggleToc} />
       <Share
         url={isBrowser ? `${location.origin}${path}` : ""}
         title={title}

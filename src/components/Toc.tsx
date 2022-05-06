@@ -7,13 +7,13 @@ import media from "../styles/customMediaQuery";
 type Props = {
   tableOfContents: TocItems[];
   isShow: boolean;
-  tocShow: () => void;
+  toggleToc: () => void;
 };
 
 type ItemsProps = {
   tableOfContents: TocItems[];
   depth: number;
-  tocShow?: () => void;
+  toggleToc?: () => void;
 };
 
 type StyledTocProps = {
@@ -32,10 +32,7 @@ const StyledToc = styled.div`
   top: 1rem;
   background-color: var(--bg);
   ${media.desktop} {
-    ${tw`pt-6 max-w-full relative`};
-  }
-  ${media.tablet} {
-    ${tw`fixed z-20 p-8 overflow-scroll`};
+    ${tw`pt-6 max-w-full fixed z-20 p-8 overflow-scroll`};
     transition: 0.3s;
     top: ${(props: StyledTocProps): string => (props.isShow ? "40%" : "100%")};
     height: 60%;
@@ -70,7 +67,7 @@ const listItem = css`
   }
 `;
 
-const Items: React.FC<ItemsProps> = ({ tableOfContents, depth, tocShow }) => {
+const Items: React.FC<ItemsProps> = ({ tableOfContents, depth, toggleToc }) => {
   return (
     <ul css={list}>
       {tableOfContents.map((item) => (
@@ -80,7 +77,7 @@ const Items: React.FC<ItemsProps> = ({ tableOfContents, depth, tocShow }) => {
           style={{
             paddingLeft: depth !== 0 ? "1em" : "0",
           }}
-          onClick={tocShow}
+          onClick={toggleToc}
         >
           <a href={item.url}>{item.title}</a>
           {item.items && (
@@ -92,11 +89,15 @@ const Items: React.FC<ItemsProps> = ({ tableOfContents, depth, tocShow }) => {
   );
 };
 
-const Toc: React.FC<Props> = ({ tableOfContents, isShow, tocShow }) => {
+const Toc: React.FC<Props> = ({ tableOfContents, isShow, toggleToc }) => {
   return (
     <StyledToc isShow={isShow}>
       <h3 css={heading}>Table of Contents</h3>
-      <Items tableOfContents={tableOfContents} depth={0} tocShow={tocShow} />
+      <Items
+        tableOfContents={tableOfContents}
+        depth={0}
+        toggleToc={toggleToc}
+      />
     </StyledToc>
   );
 };
