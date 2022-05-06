@@ -12,7 +12,7 @@ module.exports = {
     author: "dnrsm",
     postsPerPage: 100,
     blogTitle: "dnrsm.dev",
-    copyrights: "2020 dnrsm.dev",
+    copyrights: "2022 dnrsm.dev",
     defaultTheme: "light",
     headerMenu: [
       {
