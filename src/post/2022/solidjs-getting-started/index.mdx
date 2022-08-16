@@ -13,7 +13,7 @@ import LinkCard from "../../../components/LinkCard";
 軽量かつ高速なライブラリを使ってみたいなと思い、最近ちょくちょく耳にするようになったSolidJSに入門してみる。
 似たようなライブラリだとSvelteの方が有名かつ人気だと思うが、独自テンプレートなのが嫌で敬遠していた。
 逆にいうと、Reactに似ているかJSXが使えればキャッチアップのモチベーションになりやすい。
-まずは、基本機能を試してみるために小さなアプリを作ってみるだけなのですべての機能までは試さない。
+まずは、基本機能を試すために小さなアプリを作ってみるだけなのですべての機能までは試さない。
 
 The State of JS 2021の満足度と興味ではかなり高い方にある。
 さすがに利用率と認知度は低め。
@@ -35,6 +35,7 @@ playgroundや豊富なチュートリアルもあるが、まずはローカル�
   <LinkCard url="https://www.solidjs.com/tutorial/introduction_basics" />
 
 TypeScript版のテンプレートがあるようなので使ってみる。
+Viteを使っているのでビルドとHMRがかなり速くて快適。
 
 ```shell
 # テンプレートをclone
@@ -51,15 +52,13 @@ $ yarn
 $ yarn dev
 ```
 
-Viteを使っているのでビルドとHMRがかなり速くて快適。
-
 # createSignalとcreateEffectを使いカウンターを作ってみる
 
 よくあるカウンターコンポーネントを作ってみる。
 
 ## createSignal
 
-リアクティブな値を作ってみる。
+適当にリアクティブな値を作ってみる。
 `createSignal`はReactの`useState`の構文に似ているが、ゲッターとセッターの関数を返すので若干違う。
 
 ```tsx
@@ -163,7 +162,7 @@ const TodoList: Component<TodoListProps> = (props) => {
 
 ## 動的クラス
 
-動的にクラスを当てたい場合、`classList`というSXのカスタム属性があるのでそれを使う。
+動的にクラスを当てたい場合、`classList`というJSXのカスタム属性があるのでそれを使う。
 以下のように値がtrueであれば`key`がクラスとして当たる。Vueっぽい。
 
 ```tsx
@@ -176,7 +175,7 @@ const TodoList: Component<TodoListProps> = (props) => {
 
 ## Props
 
-注意点として、追跡スコープの外でpropsをdestructureするとリアクティブではなくなる。
+Propsを使う際の注意点として、追跡スコープの外でpropsをdestructureするとリアクティブではなくなる。
 JSXやエフェクトの中でプロパティにアクセスしないと再レンダリングされずリアクティブにはならない。
 
 ```tsx
@@ -312,8 +311,8 @@ export default Input;
 
 ## createStore
 
-Todoリストのストアを作ってみる。
-`createStore`で作れる。readonlyなプロキシオブジェクトを返す。
+Todoリストのストアを`createStore`で作ってみる。
+`createStore`はreadonlyなプロキシオブジェクトを返す。
 
 ```ts
 import { createStore } from "solid-js/store";
@@ -330,7 +329,7 @@ const addTodo = (text: string) => {
 };
 ```
 
-ユーティリティもいくつかあるようだが触ってない。
+ユーティリティもいくつかあるようだがまだ触ってない。
 
 <LinkCard url="https://www.solidjs.com/docs/latest/api#%E3%82%B9%E3%83%88%E3%82%A2" />
 
@@ -426,8 +425,9 @@ const [data, { refetch }] = createResource<Cat[], number>(skip, fetchData);
 読み込み中の判定とかエラーは、返り値の一つ目の値に`loading`と`error`プロパティとして生えている。
 
 ```tsx
-// 読込中
+// 読み込み中
 <div>{data.loading && "Loading..."}</div>;
+
 // エラー
 <div>{data.error && "error"}</div>;
 ```
@@ -492,6 +492,7 @@ $ yarn add solid-app-router
 <LinkCard url="https://github.com/solidjs/solid-app-router" />
 
 よくあるルーティングライブラリと似たような使い勝手。
+react-routerとか使ったことあれば普通に使えそうな感じ。
 
 ```tsx:title=App.tsx
 import type { Component } from "solid-js";
@@ -527,7 +528,7 @@ export default App;
 
 ## lazy
 
-`lazy`を使うと遅延読み込みができる。
+遅延ロード用の関数も用意されていて、`lazy`を使うと遅延ロードができる。
 
 ```tsx
 const IndexPage = lazy(() => import("./pages/Index"));
