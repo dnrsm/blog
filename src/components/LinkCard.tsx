@@ -15,7 +15,8 @@ const linkCard = css`
 `;
 
 const contentBox = css`
-  ${tw`px-5 w-full`}
+  ${tw`px-5`}
+  width: calc(100% - 8rem);
 
   h1 {
     ${tw`font-bold text-lg pt-0 mb-0  leading-7`}
@@ -41,12 +42,8 @@ const icon = css`
 `;
 
 const imageBox = css`
-  ${tw`h-full overflow-hidden `}
-  min-width: 8rem;
-
-  ${media.phone} {
-    max-width: 120px;
-  }
+  ${tw`w-full h-full overflow-hidden `}
+  max-width: 8rem;
 `;
 
 const image = css`
