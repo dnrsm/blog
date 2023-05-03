@@ -10,7 +10,7 @@ type Props = {
 };
 
 const linkCard = css`
-  ${tw`flex border rounded-md border-gray-300 border-solid overflow-hidden transition duration-300 hover:bg-gray-200  h-32 items-center`}
+  ${tw`flex border rounded-md border-gray-300 border-solid overflow-hidden transition duration-300 hover:bg-gray-200 h-32 items-center`}
   text-decoration: none !important;
 `;
 
@@ -41,8 +41,8 @@ const icon = css`
 `;
 
 const imageBox = css`
-  ${tw`w-full h-full overflow-hidden `}
-  max-width: 220px;
+  ${tw`h-full overflow-hidden `}
+  min-width: 8rem;
 
   ${media.phone} {
     max-width: 120px;
