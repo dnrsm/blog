@@ -26,7 +26,7 @@ body {
 
 .post,
 .page {
-  font-size: 15px;
+  font-size: 1rem;
 
   >p {
     margin: 1em 0;
