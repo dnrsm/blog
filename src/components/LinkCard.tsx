@@ -10,12 +10,12 @@ type Props = {
 };
 
 const linkCard = css`
-  ${tw`flex border rounded-md border-gray-300 border-solid overflow-hidden transition duration-300 hover:bg-gray-200 h-32 items-center`}
+  ${tw`flex border rounded-md border-gray-300 border-solid overflow-hidden transition duration-300 hover:bg-gray-200  h-32 items-center`}
   text-decoration: none !important;
 `;
 
 const contentBox = css`
-  ${tw`px-5`}
+  ${tw`px-5 w-full`}
 
   h1 {
     ${tw`font-bold text-lg pt-0 mb-0  leading-7`}
@@ -30,6 +30,10 @@ const description = css`
 
 const linkBox = css`
   ${tw`flex items-center text-sm mt-1`}
+`;
+
+const linkText = css`
+  ${lineClamp(1)}
 `;
 
 const icon = css`
@@ -100,7 +104,7 @@ const LinkCard: React.VFC<Props> = ({ url }) => {
                 src={`https://www.google.com/s2/favicons?sz=14&domain_url=${ogp.ogpUrl}`}
                 alt={ogp.title}
               />
-              {ogp.ogpUrl.replace("https://", "")}
+              <span css={linkText}>{ogp.ogpUrl.replace("https://", "")}</span>
             </div>
           </div>
           <div css={imageBox}>
