@@ -84,7 +84,13 @@ const LinkCard: React.VFC<Props> = ({ url }) => {
   return (
     <>
       {ogp.title !== "" ? (
-        <a href={url} css={linkCard} target="_blank" rel="noreferrer">
+        <a
+          className="linkCard"
+          href={url}
+          css={linkCard}
+          target="_blank"
+          rel="noreferrer"
+        >
           <div css={contentBox}>
             <h1>{ogp.title}</h1>
             <p css={description}>{ogp.description}</p>
