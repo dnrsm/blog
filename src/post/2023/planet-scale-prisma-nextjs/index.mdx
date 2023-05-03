@@ -2,7 +2,7 @@
 title: "PlanetScale + Prisma + Next.js 13で簡単サーバーレスを試してみる"
 date: "2023-05-03"
 path: "/blog/2023/planet-scale-prisma-nextjs"
-tags: ["Next.js"]
+tags: ["Next.js", "React", "Prisma", "PlanetScale"]
 description: "PlanetScale + Prisma + Next.js 13で簡単サーバーレスを試してみる。"
 ---
 
@@ -12,11 +12,24 @@ import LinkCard from "../../../components/LinkCard";
 
 PlanetScale + Prisma + Next.js 13 で簡単サーバーレスを試してみる
 
+今回の検証で使うライブラリのバージョンを以下のとおり。
+
+- Next.js
+  - 13.3.4
+- React
+  - 18.2.0
+- TypeScript
+  - 5.0.4
+- Prisma
+  - 4.13.0
+
 Prisma の公式ドキュメントにもガイドがある。
-https://www.prisma.io/planetscale
-https://www.prisma.io/docs/guides/database/planetscale
-https://www.prisma.io/nextjs
-https://dev.to/franciscomendes10866/build-a-full-stack-app-with-nextjs-tailwind-trpc-and-prisma-orm-4ail
+
+<LinkCard url="https://www.prisma.io/planetscale" />
+<LinkCard url="https://www.prisma.io/docs/guides/database/planetscale" />
+<LinkCard url="https://www.prisma.io/nextjs" />
+<LinkCard url="https://dev.to/franciscomendes10866" />
+<LinkCard url="https://dev.to/franciscomendes10866/build-a-full-stack-app-with-nextjs-tailwind-trpc-and-prisma-orm-4ail" />
 
 PlanetScale の公式ドキュメントにもガイドがある。
 https://planetscale.com/docs/prisma/automatic-prisma-migrations
@@ -64,8 +77,9 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
-
 ```
+
+<LinkCard url="https://beta.nextjs.org/docs/app-directory-roadmap" />
 
 # Prismaの導入
 
@@ -93,7 +107,8 @@ $ npx prisma init
 `.env` を `.gitignore` に追加する。
 
 VS code の拡張機能をインストールする。
-https://marketplace.visualstudio.com/items?itemName=Prisma.prisma
+
+<LinkCard url="https://marketplace.visualstudio.com/items?itemName=Prisma.prisma" />
 
 ## 設定ファイルの編集
 
@@ -170,15 +185,10 @@ Prisma には [Prisma Studio](https://www.prisma.io/studio) というローカ�
 
 # フロントから DB 操作する
 
-## データを取得する
+## Server Componentで取得する
 
-App Directory では Server components がデフォルトになっているので、まずはコンポーネント内で取得してみる。
-https://nextjs.org/blog/next-13#new-app-directory-beta
-https://beta.nextjs.org/docs/rendering/server-and-client-components#server-components
-
-Next.js 12 までは SSR でデータ取得する際には `getServerSideProps` を使っていたが、RFC の async/await が使えるようになったので、以下のように書ける。
-
-````tsx:title=src/app/posts/page.tsx
+App Directory では Server components がデフォルトになっているので、まずはコンポーネント内で prisma を使い直接取得してみる。
+Next.js 12 までは SSR でデータ取得する際には `getServerSideProps` を使っていたが、RFC のコンポーネントレベルでの `async`/`await` が使えるようになったので、以下のように直接的に書ける。
 
 ```tsx:title=src/app/posts/page.tsx
 import type { Post } from "@prisma/client";
@@ -207,10 +217,166 @@ export default async function Posts() {
     </main>
   );
 }
-````
+```
 
-これまでの getStaticProps や getServerSideProps は fetch の cache オプションで表現できる。
+また、少しネタが古いが、Next.js が `fetch` を拡張して独自の cache 設定ができるようになっているので、これまでの getStaticProps や getServerSideProps は fetch の cache オプションで表現できる。
 
-<LinkCard url="https://nextjs.org/blog/next-13#data-fetching" />
+<LinkCard url="https://nextjs.org/blog/next-13#new-app-directory-beta" />
+<LinkCard url="https://beta.nextjs.org/docs/rendering/server-and-client-components#server-components" />
 
-<LinkCard url="https://nextjs.org" />
+## API routeから取得する
+
+Next.js 13.2 からは Custom Route Handlers が追加されたので、それに倣って API を作ってみる。
+
+<LinkCard url="https://nextjs.org/blog/next-13-2#custom-route-handlers" />
+
+Custom Route Handlers は app ディレクトリ内に `routes.js|ts` で定義すると使える。
+`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS` の HTTP メソッドに対応していて、このメソッド名で定義された関数を export すると、そのメソッドの API を作ることができる。
+
+<LinkCard url="https://beta.nextjs.org/docs/api-reference/file-conventions/route" />
+
+今回は特にパラメータなどを受け取らない静的ルートの API を実装してみる。
+prisma を使って post テーブルから取得した一覧を返す実装は以下のようになる。
+
+```ts:title=src/app/api/posts/route.ts
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  const posts = await prisma.post.findMany();
+  return NextResponse.json({ posts });
+}
+```
+
+## Client Componentで取得する
+
+一覧を取得できる API が出来たので、今度は Client Component でデータ取得をしてみる。
+`"use client"` ディレクティブを使うと client-side で実行されるコードを書くことができる。
+
+<LinkCard url="https://beta.nextjs.org/docs/rendering/server-and-client-components#client-components" />
+
+実際に `"use client"` を使ったコンポーネントを実装する。
+Next.js 13 からは `use` も追加されたので、お試しで使ってみる。
+ただ、注意点として、公式ドキュメントによると `fetch` をラップした `use` は複数の再レンダリングを誘発する可能性があるとのことで、[SWR](https://swr.vercel.app/ja)や[TanStack Query(React Query)](https://tanstack.com/query/latest)が推奨されている。
+
+<LinkCard url="https://beta.nextjs.org/docs/data-fetching/fetching#use-in-client-components" />
+
+実際に API から取得するコンポーネントの実装。
+
+```tsx:title=src/components/Posts.tsx
+"use client";
+
+import { Post } from "@prisma/client";
+import { use } from "react";
+
+const getPosts = async () => {
+  const res = await fetch(`http://localhost:3000/api/posts`);
+  const data = await res.json();
+  return data as Post[];
+};
+
+export default function Posts() {
+  const posts = use(getPosts());
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>
+          <p>title: {post.title}</p>
+          <p>content: {post.content}</p>
+          <p>likes: {post.likes}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+```tsx:title=src/app/posts/page.tsx
+import { Suspense } from "react";
+import Posts from "@/components/Posts";
+
+export default function PostsPage() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <Posts />
+    </Suspense>
+  );
+}
+```
+
+<LinkCard url="https://beta.nextjs.org/docs/routing/route-handlers" />
+
+## 動的ルートから取得する
+
+詳細ページなどで個別の動的なデータを取得する場合は、動的ルートの API を作る必要がある。
+今回は、`/api/posts/[id]`のようにパスパラメータで取得できるエンドポイントを作ってみる。
+`params` からディレクトリ名（`[id]`）に指定した id の値を取得できるようなので、それを使って prisma 経由でデータを取得するとこんな感じ。
+
+```ts:title=src/app/api/posts/[id]/route.ts
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+
+export async function GET(
+  _req: Request,
+  { params }: { params: { id: string } }
+) {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(params.id),
+    },
+  });
+
+  if (post === null) {
+    return new NextResponse(null, { status: 404 });
+  }
+
+  return NextResponse.json(post);
+}
+```
+
+コンポーネントからも `params` からディレクトリ名（`[id]`）に指定した id の値を取得できるので、それをエンドポイントのパスパラメータに指定して取得する。
+Server Component として実装すると以下のような感じになる。
+
+```tsx:title=src/app/posts/[id]/page.tsx
+import type { Post } from "@prisma/client";
+
+async function getPost(id: string) {
+  const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
+    next: { revalidate: 60 },
+  });
+
+  const data = await res.json();
+  return data as Post;
+}
+
+export default async function PostPage({ params }: { params: { id: string } }) {
+  const post = await getPost(params.id);
+
+  return (
+    <main>
+      <p>title: {post.title}</p>
+      <p>content: {post.content}</p>
+      <p>likes: {post.likes}</p>
+    </main>
+  );
+}
+```
+
+## データを作成する
+
+一覧取得時に実装した `/api/posts` のエンドポイントに POST 用の関数を追加する。
+`prisma` の `create` でデータを作成する。
+
+```ts:title=src/app/api/posts/route.ts
+...
+export async function POST(request: Request) {
+  const data = await request.json();
+
+  const post = await prisma.post.create({
+    data: { title: data.title, content: data.content },
+  });
+
+  return new NextResponse(`${post.id}`, { status: 201 });
+}
+```
