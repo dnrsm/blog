@@ -2,34 +2,34 @@ import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
 import { css } from "@emotion/core";
 import media from "../styles/customMediaQuery";
+import { getOgpValues } from "../domain/ogp";
+import { lineClamp } from "../styles/styles";
 
 type Props = {
   url: string;
 };
 
 const linkCard = css`
-  ${tw`flex border rounded-md border-gray-300 border-solid overflow-hidden transition duration-300 hover:bg-gray-100`}
+  ${tw`flex border rounded-md border-gray-300 border-solid overflow-hidden transition duration-300 hover:bg-gray-200 h-32 items-center`}
   text-decoration: none !important;
 `;
 
-const box = css`
-  ${tw`flex flex-col px-5 py-3 flex-1`}
-`;
+const contentBox = css`
+  ${tw`px-5`}
 
-const title = css`
-  ${tw`font-bold text-xl`}
+  h1 {
+    ${tw`font-bold text-lg pt-0 mb-0  leading-7`}
+    ${lineClamp(2)}
+  }
 `;
 
 const description = css`
-  ${tw`text-sm text-gray-600 mb-4`}
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  ${tw`text-sm text-gray-600`}
+  ${lineClamp(1)}
 `;
 
-const urlCss = css`
-  ${tw`flex items-center`}
+const linkBox = css`
+  ${tw`flex items-center text-sm mt-1`}
 `;
 
 const icon = css`
@@ -37,7 +37,7 @@ const icon = css`
 `;
 
 const imageBox = css`
-  ${tw`w-full h-32 overflow-hidden `}
+  ${tw`w-full h-full overflow-hidden `}
   max-width: 220px;
 
   ${media.phone} {
@@ -65,36 +65,11 @@ const LinkCard: React.VFC<Props> = ({ url }) => {
       .then((text) => {
         const el = new DOMParser().parseFromString(text, "text/html");
         const headEls = el.head.children;
-        let title = "";
-        let description = "";
-        let ogpUrl = "";
-        let imageUrl = "";
-        Array.from(headEls).map((el) => {
-          const name = el.getAttribute("name");
-          const tagName = el.tagName;
-
-          if (name === "og:title" || tagName === "title") {
-            title = el.getAttribute("content") || el.textContent;
-          }
-          if (name === "og:description" || name === "description") {
-            description = el.getAttribute("content");
-          }
-          if (name === "og:url") {
-            ogpUrl = el.getAttribute("content");
-          }
-          if (name === "og:image:url") {
-            imageUrl = el.getAttribute("content");
-          }
-        });
+        const ogpValues = getOgpValues(headEls);
 
         setOgp({
           ...ogp,
-          ...{
-            title,
-            description,
-            ogpUrl,
-            imageUrl,
-          },
+          ...ogpValues,
         });
       })
       .catch((e) => {
@@ -110,17 +85,17 @@ const LinkCard: React.VFC<Props> = ({ url }) => {
     <>
       {ogp.title !== "" ? (
         <a href={url} css={linkCard} target="_blank" rel="noreferrer">
-          <div css={box}>
-            <p css={title}>{ogp.title}</p>
+          <div css={contentBox}>
+            <h1>{ogp.title}</h1>
             <p css={description}>{ogp.description}</p>
-            <p css={urlCss}>
+            <div css={linkBox}>
               <img
                 css={icon}
                 src={`https://www.google.com/s2/favicons?sz=14&domain_url=${ogp.ogpUrl}`}
                 alt={ogp.title}
               />
               {ogp.ogpUrl.replace("https://", "")}
-            </p>
+            </div>
           </div>
           <div css={imageBox}>
             <img css={image} src={ogp.imageUrl} alt={ogp.title} />
