@@ -1,5 +1,4 @@
 {
-  "typescript.enablePromptUseWorkspaceTsdk": true,
   "editor.formatOnSave": false,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -42,5 +41,8 @@
     "editor.codeActionsOnSave": {
       "source.fixAll": true
     }
+  },
+  "[mdx]": {
+    "editor.formatOnSave": true
   }
 }
